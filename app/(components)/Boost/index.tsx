@@ -10,6 +10,7 @@ import { useGame } from "@/hooks/useGame"
 import clsx from "clsx"
 import { useTranslations } from "next-intl"
 import { useState } from "react"
+import { HOST } from "@/config/constants"
 import styles from "./Boost.module.scss"
 
 interface CardBoostProps {
@@ -112,7 +113,7 @@ export const Boost = () => {
       price: 0,
       illu: (
         <img
-          src="/img/boost.png"
+          src={`${HOST}/img/boost.png`}
           width={340}
           height={401}
           alt={t("boost")}
@@ -127,7 +128,7 @@ export const Boost = () => {
       price: 0,
       illu: (
         <img
-          src="/img/energy.png"
+          src={`${HOST}/img/energy.png`}
           width={340}
           height={401}
           alt={t("energy")}
@@ -146,7 +147,7 @@ export const Boost = () => {
       max: true,
       illu: (
         <img
-          src="/img/energy.png"
+          src={`${HOST}/img/energy.png`}
           width={340}
           height={401}
           alt={t("energy")}
@@ -162,7 +163,7 @@ export const Boost = () => {
       max: true,
       illu: (
         <img
-          src="/img/energy.png"
+          src={`${HOST}/img/energy.png`}
           width={340}
           height={401}
           alt={t("energy")}
@@ -178,7 +179,7 @@ export const Boost = () => {
       price: 1000,
       illu: (
         <img
-          src="/img/energy.png"
+          src={`${HOST}/img/energy.png`}
           width={340}
           height={401}
           alt={t("energy")}
@@ -193,7 +194,7 @@ export const Boost = () => {
       <div className={styles.boost} onClick={() => setIsOpen(true)}>
         <span>{t("boost")}</span>
         <img
-          src="/img/boost.png"
+          src={`${HOST}/img/boost.png`}
           width={340}
           height={401}
           alt={t("boost")}

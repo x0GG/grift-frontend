@@ -7,6 +7,7 @@ import { Content, Title } from "@/components/Kit"
 import { useTranslations } from "next-intl"
 import { useState } from "react"
 import { toast } from "sonner"
+import { HOST } from "@/config/constants"
 import styles from "./friends.module.scss"
 
 interface CardSpecialProps {
@@ -17,7 +18,7 @@ interface CardSpecialProps {
 const CardSpecial = ({ title, amount }: CardSpecialProps) => {
   return (
     <div className={styles.special}>
-      <img src="/img/gift.png" width={732} height={796} alt={title} />
+      <img src={`${HOST}/img/gift.png`} width={732} height={796} alt={title} />
       <div>
         <h3>{title}</h3>
         <span>
@@ -46,7 +47,7 @@ export default function Page() {
         txt={t("txt")}
         top={
           <img
-            src="/img/gift.png"
+            src={`${HOST}/img/gift.png`}
             width={732}
             height={796}
             alt="Gift"

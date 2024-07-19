@@ -3,7 +3,7 @@
 import { Token3D } from "@/components/Token3D"
 import { TopGame } from "@/components/TopGame"
 import { TotalCoins } from "@/components/TotalCoins"
-import { DURATION_FEEDBACK } from "@/config/constants"
+import { DURATION_FEEDBACK, HOST } from "@/config/constants"
 import { useGame } from "@/hooks/useGame"
 import { useSettingsStore } from "@/stores/settings"
 import { useRef } from "react"
@@ -102,10 +102,10 @@ const Game = () => {
           className={styles.gameCanvas}
         /> */}
         <img
-          src={`/img/coins/${currentLevel.id}.png`}
+          src={`${HOST}/img/coins/${currentLevel.id}.png`}
           className={styles.gameCanvas}
         />
-        <img src="/img/socle.png" className={styles.socle} loading="lazy" />
+        <img src={`${HOST}/img/socle.png`} className={styles.socle} loading="lazy" />
       </div>
       <div ref={feedBackRef} className={styles.feedback} />
     </div>

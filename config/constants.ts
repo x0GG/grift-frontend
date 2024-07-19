@@ -3,7 +3,7 @@ import { env } from "@/env"
 export const REVALIDATE_TIME =
   env.NEXT_PUBLIC_NODE_ENV === "development" ? 0 : 60 * 60 * 24
 
-export const HOST = "https://localhost:3000"
+export const HOST = "https://x0gg.github.io/grift-frontend"
 
 export const GSAP_DURATION = 1
 export const GSAP_STAGGER = 0.15

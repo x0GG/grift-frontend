@@ -7,6 +7,7 @@ import { Modal } from "@/components/Modal"
 import { formatBigNumber } from "@/libs/utils"
 import clsx from "clsx"
 import { useState } from "react"
+import { HOST } from "@/config/constants"
 import styles from "./Daily.module.scss"
 
 export const Daily = () => {
@@ -50,14 +51,14 @@ export const Daily = () => {
       <div className={styles.daily} onClick={() => setIsOpen(true)}>
         <div>
           <img
-            src="/img/calendar.png"
+            src={`${HOST}/img/calendar.png`}
             width={732}
             height={426}
             alt="Calendar"
             className={styles.calendarFirst}
           />
           <img
-            src="/img/calendar.png"
+            src={`${HOST}/img/calendar.png`}
             width={732}
             height={426}
             alt="Calendar"
@@ -76,7 +77,7 @@ export const Daily = () => {
             txt="Accrue coins for logging into the game daily without skipping."
             top={
               <img
-                src="/img/calendar.png"
+                src={`${HOST}/img/calendar.png`}
                 width={732}
                 height={426}
                 alt="Calendar"

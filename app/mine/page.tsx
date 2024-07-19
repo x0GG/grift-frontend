@@ -8,6 +8,7 @@ import clsx from "clsx"
 import { useTranslations } from "next-intl"
 import { useState } from "react"
 import { CardMine, CardMineProps } from "./(components)/CardMine"
+import { HOST } from "@/config/constants"
 import styles from "./mine.module.scss"
 
 export default function Page() {
@@ -36,21 +37,21 @@ export default function Page() {
   const cards: CardMineProps[] = [
     {
       title: "Task Ex 1",
-      illu: "/img/mine-1.jpg",
+      illu: `${HOST}/img/mine-1.jpg`,
       level: 1,
       profit: 2000,
       price: 150000
     },
     {
       title: "Task Ex 2",
-      illu: "/img/mine-2.jpeg",
+      illu: `${HOST}/img/mine-2.jpeg`,
       level: 1,
       profit: 20,
       price: 150
     },
     {
       title: "Task Ex 3",
-      illu: "/img/mine-3.jpg",
+      illu: `${HOST}/img/mine-3.jpg`,
       level: 2,
       profit: 18,
       price: 250

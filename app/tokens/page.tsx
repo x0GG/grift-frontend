@@ -10,6 +10,7 @@ import { useGame } from "@/hooks/useGame"
 import { useLevel } from "@/hooks/useLevel"
 import { useState } from "react"
 import styles from "./token.module.scss"
+import { HOST } from "@/config/constants"
 
 export default function Page() {
   const { level } = useGame()
@@ -26,7 +27,7 @@ export default function Page() {
           <div className={styles.token}>
             {/* <Token3D id={infoLevel.id} /> */}
             <img
-              src={`/img/coins/${infoLevel.id}_min.png`}
+              src={`${HOST}/img/coins/${infoLevel.id}_min.png`}
               className={styles.gameCanvas}
             />
           </div>

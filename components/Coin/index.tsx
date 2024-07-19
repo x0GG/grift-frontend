@@ -1,5 +1,6 @@
 "use client"
 
+import { HOST } from "@/config/constants"
 import { useGame } from "@/hooks/useGame"
 import { useLevel } from "@/hooks/useLevel"
 import { HTMLAttributes } from "react"
@@ -21,7 +22,7 @@ export const Coin = ({ level, min, ...props }: CoinProps) => {
   return (
     <img
       {...props}
-      src={`/img/coins/${info.id}${min ? "_min" : ""}.png`}
+      src={`${HOST}/img/coins/${info.id}${min ? "_min" : ""}.png`}
       width={min ? 88 : 350}
       height={min ? 88 : 350}
       alt={info.name}

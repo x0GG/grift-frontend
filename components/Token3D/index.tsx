@@ -4,13 +4,14 @@ import { SplineProps } from "@splinetool/react-spline"
 import clsx from "clsx"
 import React, { Suspense } from "react"
 import styles from "./Token3D.module.scss"
+import { HOST } from "@/config/constants"
 
 const Spline = React.lazy(() => import("@splinetool/react-spline"))
 
 const Loading = () => {
   return (
     <div className={styles.loading}>
-      <img src="/img/loading.svg" width={85} height={85} alt="Loading" />
+      <img src={`${HOST}/img/loading.svg`} width={85} height={85} alt="Loading" />
     </div>
   )
 }
