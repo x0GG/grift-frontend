@@ -4,7 +4,8 @@ const withNextIntl = createNextIntlPlugin("./config/i18n.ts")
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    output: 'export'
+    output: 'export',
+    distDir: 'docs'
 }
 
 export default withNextIntl(nextConfig)
