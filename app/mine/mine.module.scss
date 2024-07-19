@@ -1,0 +1,48 @@
+@import "styles/mixins";
+
+.total {
+  top: 0.05em;
+}
+
+.tab {
+  margin-top: calc(var(--main-padding) * -0.5);
+  @include user-select;
+
+  &Nav {
+    --padding: var(--size-1);
+    @include flex;
+    background-color: var(--bg-opacity-1);
+    padding: var(--padding);
+    border-radius: 100px;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    @include backdrop;
+    box-shadow: 0 3px 25px rgba(var(--bg-rgb), 0.75);
+
+    &Item {
+      @include transition(transition-link, (background-color, color));
+      @include ellipsis;
+      @include flex;
+      padding: 0.6em 0 0.5em;
+      font-size: calc(12px + 1 * (100vw - 320px) / 1080);
+      flex: auto;
+      font-weight: 500;
+      border-radius: inherit;
+      color: var(--grey);
+
+      &Active {
+        background-color: var(--pink);
+        color: var(--white);
+      }
+    }
+  }
+
+  &Content {
+    --gap: calc(var(--main-padding) / 2.5);
+    @include flex(stretch, stretch);
+    padding-top: var(--gap);
+    gap: var(--gap);
+    flex-wrap: wrap;
+  }
+}

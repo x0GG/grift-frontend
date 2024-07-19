@@ -1,0 +1,47 @@
+{
+  "All": {
+    "level": "Level"
+  },
+  "Navigation": {
+    "friends": "Friends",
+    "clicker": "Clicker",
+    "mine": "Mine",
+    "earn": "Earn",
+    "airdrop": "Airdrop"
+  },
+  "Clicker": {
+    "Top": {
+      "earnByTap": "Earn by tap",
+      "earnToLvlUp": "Earn to level up",
+      "profitPerHour": "Profit per hour"
+    },
+    "Bottom": {
+      "boost": "Boost",
+      "energy": "Energy"
+    }
+  },
+  "NoMobile": {
+    "title": "Leave the desktop.",
+    "txt": "Mobile gaming rocks!"
+  },
+  "ModalWork": {
+    "title": "The exchange has started working for you:",
+    "button": "Get It"
+  },
+  "Friends": {
+    "title": "Invite Friends!",
+    "txt": "You & Yours Friends will Receive Bonuses.",
+    "copied": "The URL has been copied successfully!",
+    "list": {
+      "title": "List of your friends",
+      "invite": "Invite a Friend",
+      "no": "You haven't invited anyone yet!"
+    }
+  },
+  "Mine": {
+    "markets": "Markets",
+    "web3": "Web3 Leaders",
+    "license": "License",
+    "specials": "Specials"
+  }
+}

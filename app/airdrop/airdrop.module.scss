@@ -1,0 +1,9 @@
+@import "styles/mixins";
+
+.coming {
+  text-align: center;
+  background-color: var(--bg-opacity-1);
+  border-radius: var(--radius-2);
+  margin-top: var(--main-padding);
+  padding: 1em;
+}

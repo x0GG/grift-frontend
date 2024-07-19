@@ -1,0 +1,32 @@
+@import "styles/mixins";
+
+.top {
+  @include flex(center, stretch);
+  gap: calc(var(--main-padding) / 3);
+  z-index: 50;
+}
+
+.card {
+  --padding: calc(var(--main-padding) / 2);
+  padding: var(--padding) calc(var(--padding) / 1.5);
+  gap: calc(var(--padding) / 2);
+  background-color: var(--bg-opacity-1);
+  flex: 1;
+  @include flex(center, center, column);
+  border-radius: var(--radius-2);
+
+  span {
+    color: var(--grey);
+    font-size: calc(10px + 10 * (100vw - 320px) / 1080);
+  }
+
+  strong {
+    line-height: 0.9;
+    font-weight: 800;
+
+    img {
+      width: 1em;
+      margin-left: 0.1em;
+    }
+  }
+}

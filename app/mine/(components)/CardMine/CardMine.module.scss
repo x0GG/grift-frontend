@@ -1,0 +1,166 @@
+@import "styles/mixins";
+
+.card {
+  --radius: var(--radius-2);
+  --padding: calc(var(--main-padding) / 1.5);
+  width: calc(50% - var(--gap) / 2);
+  background-color: var(--bg-opacity-1);
+  border-radius: var(--radius);
+  overflow: hidden;
+  @include user-select;
+}
+
+.top {
+  @include flex;
+  padding: calc(var(--padding) / 1.25);
+  gap: calc(var(--padding) / 2);
+}
+
+.bottom {
+  --r: calc(var(--radius) / 1.25);
+  @include flex(space-between);
+  background-color: var(--bg-opacity-1);
+  padding: calc(var(--padding) / 1.25);
+  padding-bottom: calc(var(--padding) / 1.25 - 1px);
+  border-radius: var(--r) var(--r) 0 0;
+  font-size: calc(12px + 6 * (100vw - 320px) / 1080);
+  gap: calc(var(--padding) / 2);
+
+  .left {
+    font-weight: bold;
+    white-space: nowrap;
+  }
+
+  .right {
+    @include flex;
+    gap: 0.2em;
+
+    small {
+      color: var(--bg-opacity-2);
+      font-weight: 500;
+      font-size: 0.8em;
+    }
+
+    strong {
+      font-weight: 800;
+      color: var(--pink);
+      text-align: right;
+
+      &.required {
+        color: var(--danger);
+      }
+    }
+
+    img {
+      width: 1em;
+      top: -1px;
+    }
+  }
+}
+
+.illu {
+  --size: calc(36px + 14 * (100vw - 320px) / 1080);
+  width: var(--size);
+  height: var(--size);
+  background-color: var(--bg-opacity-1);
+  border-radius: 50%;
+  align-self: flex-start;
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.title {
+  flex: 1;
+  font-weight: bold;
+  font-size: calc(12px + 10 * (100vw - 320px) / 1080);
+  line-height: 1;
+  padding-top: 0.2em;
+
+  span {
+    display: block;
+    font-size: calc(10px + 6 * (100vw - 320px) / 1080);
+    margin-top: 0.5em;
+    font-weight: 400;
+    color: var(--success);
+    opacity: 0.5;
+  }
+
+  strong {
+    font-weight: 800;
+    color: var(--success);
+    font-size: 1.2em;
+    display: block;
+    margin-top: 0.3em;
+
+    img {
+      width: 0.9em;
+      top: -0.1em;
+      margin-left: 0.2em;
+    }
+  }
+}
+
+.lock {
+  @include flex;
+  background-color: rgba(var(--danger-rgb), 0.1);
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  font-size: calc(20px + 3 * (100vw - 320px) / 1080);
+  color: var(--danger);
+}
+
+.modal {
+  --modal-padding: calc(var(--main-padding) * 1.25);
+
+  &Top {
+    @include flex;
+    gap: var(--modal-padding);
+
+    .illu {
+      --size: calc(80px + 40 * (100vw - 320px) / 1080);
+    }
+
+    .right {
+      flex: 1;
+
+      .title {
+        font-size: calc(24px + 12 * (100vw - 320px) / 1080);
+
+        span {
+          font-size: calc(14px + 2 * (100vw - 320px) / 1080);
+        }
+      }
+    }
+  }
+
+  &Bottom {
+    background-color: var(--bg-opacity-1);
+    margin: calc(var(--modal-padding) * -1);
+    margin-top: 0;
+    padding: var(--modal-padding);
+    border-radius: var(--radius-1) var(--radius-1) 0 0;
+
+    .btn {
+      width: 100%;
+
+      strong {
+        color: var(--pink);
+        font-weight: 800;
+
+        img {
+          width: 1em;
+          top: -0.1em;
+          margin-left: 0.2em;
+        }
+      }
+    }
+  }
+}

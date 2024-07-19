@@ -1,0 +1,77 @@
+@charset "UTF-8";
+
+/* Import base */
+
+@import "mixins";
+@import "colors";
+@import "easing";
+@import "variables";
+@import "reset";
+
+/* General Styles */
+
+html {
+  background-color: var(--bg);
+  color: var(--white);
+  font-size: calc(15px + 1 * (100vw - 320px) / 1080);
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+  overflow: hidden;
+  @include no-scrollbar;
+}
+
+html,
+body {
+  overscroll-behavior-y: none;
+  overscroll-behavior-x: none;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-main);
+}
+
+canvas {
+  image-rendering: optimizeQuality;
+}
+
+/* No Mobile */
+
+.no-mobile {
+  .no-mobile-layer {
+    @include flex(center, center, column);
+  }
+}
+
+/* Reveal */
+
+[data-reveal] {
+  --translate: 2rem;
+  opacity: 0;
+  visibility: hidden;
+  will-change: transform, opacity;
+  transform: translate3d(var(--x, 0), var(--y, 0), 0);
+
+  &[data-reveal="bottom"] {
+    --y: var(--translate);
+  }
+
+  &[data-reveal="top"] {
+    --y: calc(var(--translate) * -1);
+  }
+
+  &[data-reveal="right"] {
+    --x: var(--translate);
+  }
+
+  &[data-reveal="left"] {
+    --x: calc(var(--translate) * -1);
+  }
+
+  &[data-reveal="opacity"] {
+    transform: none !important;
+  }
+}

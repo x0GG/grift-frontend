@@ -1,0 +1,143 @@
+@import "styles/mixins";
+
+.clicker {
+  display: flex;
+  min-height: calc(100% + var(--main-padding) + var(--nav-height));
+  margin-bottom: calc((var(--main-padding) + var(--nav-height)) * -1);
+  flex-direction: column;
+  @include user-select;
+
+  &::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    inset: 0 calc(var(--main-padding) * -1);
+    bottom: 0;
+    background: url(/img/background.png) top center/cover no-repeat;
+    @include mask(linear-gradient(to top, #000000 50%, rgba(0, 0, 0, 0)) 100%);
+  }
+}
+
+.top {
+  margin-bottom: var(--main-padding);
+}
+
+.bottom {
+  position: sticky;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 100;
+  @include flex(space-between);
+  font-size: calc(16px + 4 * (100vw - 320px) / 1080);
+}
+
+.game {
+  flex: 1;
+  display: flex;
+  width: calc(100% + var(--main-padding) * 2);
+  left: calc(var(--main-padding) * -1);
+  touch-action: manipulation;
+
+  * {
+    touch-action: manipulation;
+  }
+
+  &Content {
+    flex: 1;
+    padding: calc(var(--main-padding) / 2) var(--main-padding) 0;
+    display: flex;
+    align-items: center;
+    min-height: 100%;
+    overflow: hidden;
+  }
+
+  &Canvas {
+    pointer-events: none;
+    margin: auto;
+    padding-bottom: 30vw;
+    @include flex;
+    transition: transform 0.1s var(--ease-out-expo);
+    will-change: transform;
+    width: 95% !important;
+    max-width: 400px;
+    left: 0;
+    height: auto !important;
+    z-index: 5;
+  }
+
+  &.clicked {
+    .gameCanvas {
+      transform: scale(0.9);
+    }
+  }
+
+  & > * {
+    z-index: 1;
+  }
+}
+
+.socle {
+  position: absolute;
+  top: 60%;
+  width: 70%;
+  pointer-events: none;
+  max-width: 400px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 0;
+  @include user-select;
+  @include mask(linear-gradient(to bottom, #000000 50%, rgba(0, 0, 0, 0)) 100%);
+}
+
+.feedback {
+  position: absolute;
+  inset: -15% 0 0;
+  z-index: 5;
+  pointer-events: none;
+  @include mask(linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #000 20%));
+  @include user-select;
+
+  & > * {
+    position: absolute;
+    font-size: calc(50px + 20 * (100vw - 320px) / 1080);
+    animation: feedback var(--feedback-duration) var(--ease-in-out-quad);
+    animation-fill-mode: forwards;
+    font-weight: 800;
+    line-height: 1;
+    @include flex;
+    transform-origin: top center;
+
+    &::before,
+    &::after {
+      content: attr(data-text);
+      position: absolute;
+      @include translate-center;
+    }
+
+    &::before {
+      @include text-stroke(var(--white), 2px);
+      opacity: 0.5;
+    }
+
+    &::after {
+      @include text-gradient(
+        linear-gradient(to bottom, var(--pink) 30%, var(--purple) 100%)
+      );
+    }
+
+    @keyframes feedback {
+      0% {
+        transform: scale(0) translateY(0.5em);
+        opacity: 0;
+      }
+      10% {
+        transform: scale(1) translateY(0.5em);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(0.75) translateY(-3em);
+        opacity: 0;
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+@import "styles/mixins";
+
+.content {
+  padding: var(--size-2);
+  @include flex(center, center, column);
+  gap: var(--size-3);
+}
+
+.coin {
+  width: calc(150px + 50 * (100vw - 320px) / 1080);
+}
+
+.title {
+  font-size: calc(16px + 4 * (100vw - 320px) / 1080);
+}
+
+.number {
+  font-size: calc(40px + 16 * (100vw - 320px) / 1080);
+  font-weight: 800;
+}

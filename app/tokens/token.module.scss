@@ -1,0 +1,84 @@
+@import "styles/mixins";
+
+.heading {
+  --heading-title: calc(40px + 24 * (100vw - 320px) / 1080);
+}
+
+.token {
+  --width-token: calc(250px + 80 * (100vw - 320px) / 1080) !important;
+  @include flex;
+  @include mask(linear-gradient(to bottom, #000000 40%, rgba(0, 0, 0, 0)) 80%);
+  margin-top: calc(var(--main-padding) * -1.5);
+  margin-bottom: calc(var(--width-token) * -0.2);
+  z-index: 0;
+  width: var(--width-token);
+  aspect-ratio: 1 / 1;
+
+  canvas {
+    width: var(--width-token) !important;
+    height: auto !important;
+  }
+}
+
+.bg {
+  @include blur(80px);
+  position: absolute;
+  width: 90%;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: -1;
+  animation: showBg 1s var(--ease-out-expo) forwards;
+
+  @keyframes showBg {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 0.5;
+    }
+  }
+}
+
+.nav {
+  @include flex(space-between, stretch);
+  left: 0;
+  top: 0;
+  position: absolute;
+  width: 100%;
+  height: calc(250px + 80 * (100vw - 320px) / 1080 + var(--main-padding) * 2);
+  pointer-events: none;
+  font-size: calc(24px + 8 * (100vw - 320px) / 1080);
+
+  button {
+    pointer-events: auto;
+    color: var(--bg-opacity-2);
+    height: 100%;
+    padding: calc(var(--main-padding) / 2);
+  }
+
+  .next {
+    margin-left: auto;
+  }
+
+  .prev {
+    margin-right: auto;
+  }
+}
+
+.ladder {
+  border-radius: var(--radius-1) var(--radius-1) 0 0;
+  margin: 0 calc(var(--main-padding) * -1);
+  padding: var(--main-padding);
+  margin-top: calc(var(--main-padding) * 1.5);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    height: 200px;
+    z-index: 0;
+    background: linear-gradient(var(--bg-opacity-1), rgba(var(--bg-rgb), 0));
+    border-radius: inherit;
+  }
+}

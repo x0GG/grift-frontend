@@ -1,0 +1,47 @@
+"use client"
+
+import { Coin } from "@/components/Coin"
+import { Icon } from "@/components/Icon"
+import { levels } from "@/config/levels"
+import { useGame } from "@/hooks/useGame"
+import { useTranslations } from "next-intl"
+import Link from "next/link"
+import styles from "./Progress.module.scss"
+
+export const Progress = () => {
+  const t = useTranslations("All")
+  const { maxLevel, totalCoins, level, coins, currentLevel, nextLevel } =
+    useGame()
+
+  const nextRequiredCoin = nextLevel.requiredCoin
+  const progressPercent = maxLevel ? 100 : (totalCoins / nextRequiredCoin) * 100
+
+  return (
+    <div className={styles.progress}>
+      <div className={styles.xp}>
+        <div className={styles.xpInfo}>
+          <Link href="/tokens">
+            {currentLevel.name}
+            <Icon icon="ph:caret-right-fill" />
+          </Link>
+          <div>
+            <small>{t("level")}</small> {level} / {levels.length}
+          </div>
+        </div>
+        <Coin level={level} />
+        <div className={styles.xpBar}>
+          <div
+            className={styles.xpBarProgress}
+            style={{ width: progressPercent + "%" }}
+          />
+        </div>
+        <Coin level={level + 1} />
+        {!maxLevel && (
+          <small className={styles.xpCurrent}>
+            {totalCoins} / {nextRequiredCoin}
+          </small>
+        )}
+      </div>
+    </div>
+  )
+}

@@ -1,0 +1,137 @@
+@import "styles/mixins";
+
+.daily {
+  --padding: calc(var(--main-padding) / 1.25);
+  @include flex;
+  background-color: var(--bg-opacity-1);
+  border-radius: var(--radius-2);
+  padding: var(--padding);
+  gap: var(--padding);
+
+  img {
+    width: calc(100px + 50 * (100vw - 320px) / 1080);
+    pointer-events: none;
+  }
+
+  .left {
+    flex: 1;
+    font-size: calc(24px + 12 * (100vw - 320px) / 1080);
+
+    small {
+      display: block;
+      font-size: 0.6em;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+    }
+
+    strong {
+      color: var(--pink);
+    }
+  }
+
+  .arrow {
+    margin-right: calc(var(--padding) * 0.5);
+    color: var(--grey);
+  }
+}
+
+.calendar {
+  @include blur(40px);
+  position: absolute;
+  left: 0;
+
+  &First {
+    animation: scalingCalendar 1s infinite;
+  }
+
+  &Heading {
+    width: calc(150px + 50 * (100vw - 320px) / 1080);
+    margin: calc(var(--main-padding) * -1) 0 calc(var(--main-padding) * -0.5);
+    @include mask(
+      linear-gradient(to bottom, #000000 50%, rgba(0, 0, 0, 0)) 100%
+    );
+  }
+
+  @keyframes scalingCalendar {
+    0%,
+    100% {
+      transform: scale(1.1);
+    }
+    50% {
+      transform: scale(1);
+    }
+  }
+}
+
+.modal {
+  .button {
+    @include backdrop;
+    --btn-color: var(--success);
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+  }
+}
+
+.dates {
+  --n: 3;
+  --gap: calc(var(--main-padding) / 5);
+  @include flex(stretch, stretch);
+  @include user-select;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: var(--gap);
+  width: calc(100% + var(--gap));
+}
+
+.date {
+  @include flex(center, center, column);
+  background-color: var(--bg-opacity-1);
+  border-radius: var(--radius-2);
+  width: calc(100% / var(--n) - var(--gap));
+  gap: calc(var(--main-padding) / 4);
+  border: 2px solid transparent;
+
+  &.ok {
+    border-color: var(--success);
+    background-color: rgba(var(--success-rgb), 0.1);
+
+    .day {
+      color: var(--success);
+      opacity: 0.5;
+    }
+
+    .reward {
+      color: var(--success);
+    }
+  }
+
+  &.active {
+    border-color: rgba(var(--success-rgb), 0.25);
+
+    .day {
+      color: var(--white);
+    }
+
+    .reward {
+      color: var(--pink);
+    }
+  }
+}
+
+.day {
+  font-size: calc(13px + 6 * (100vw - 320px) / 1080);
+  font-weight: 600;
+  color: var(--grey);
+}
+
+.reward {
+  font-size: calc(20px + 14 * (100vw - 320px) / 1080);
+  font-weight: 800;
+  color: var(--white);
+
+  img {
+    width: 1em;
+    top: -0.1em;
+  }
+}

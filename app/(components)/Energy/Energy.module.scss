@@ -1,0 +1,12 @@
+@import "styles/mixins";
+
+.energy {
+  @include flex;
+  gap: 0.5em;
+  font-weight: 800;
+  margin-left: -0.2em;
+
+  img {
+    width: 1.75em;
+  }
+}
