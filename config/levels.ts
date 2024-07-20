@@ -3,7 +3,7 @@ import { Level } from "@/types/Level"
 export const levels: Level[] = [
   {
     id: "bronze",
-    name: "Bronze",
+    name: "Tin Foil Hat",
     requiredCoin: 0,
     earnByTap: 1,
     earnToLevelUp: 1000,
@@ -11,7 +11,7 @@ export const levels: Level[] = [
   },
   {
     id: "silver",
-    name: "Silver",
+    name: "Deep Diver",
     requiredCoin: 500,
     earnByTap: 2,
     earnToLevelUp: 2000,
@@ -19,7 +19,7 @@ export const levels: Level[] = [
   },
   {
     id: "gold",
-    name: "Gold",
+    name: "Crackpot",
     requiredCoin: 2000,
     earnByTap: 3,
     earnToLevelUp: 3000,
@@ -27,7 +27,7 @@ export const levels: Level[] = [
   },
   {
     id: "platinum",
-    name: "Platinum",
+    name: "Adept of Secrets",
     requiredCoin: 5000,
     earnByTap: 4,
     earnToLevelUp: 4000,
@@ -35,7 +35,7 @@ export const levels: Level[] = [
   },
   {
     id: "diamond",
-    name: "Diamond",
+    name: "55D Chess Player",
     requiredCoin: 10000,
     earnByTap: 5,
     earnToLevelUp: 5000,
@@ -43,7 +43,7 @@ export const levels: Level[] = [
   },
   {
     id: "epic",
-    name: "Epic",
+    name: "Chilluminati",
     requiredCoin: 20000,
     earnByTap: 6,
     earnToLevelUp: 6000,
@@ -51,7 +51,7 @@ export const levels: Level[] = [
   },
   {
     id: "legendary",
-    name: "Legendary",
+    name: "Metatron",
     requiredCoin: 50000,
     earnByTap: 7,
     earnToLevelUp: 7000,
@@ -59,7 +59,7 @@ export const levels: Level[] = [
   },
   {
     id: "master",
-    name: "Master",
+    name: "Reality Haxxor",
     requiredCoin: 100000,
     earnByTap: 8,
     earnToLevelUp: 8000,
@@ -67,7 +67,7 @@ export const levels: Level[] = [
   },
   {
     id: "grandmaster",
-    name: "Grandmaster",
+    name: "Ascended Master",
     requiredCoin: 200000,
     earnByTap: 9,
     earnToLevelUp: 9000,
@@ -75,7 +75,7 @@ export const levels: Level[] = [
   },
   {
     id: "lord",
-    name: "Lord",
+    name: "Grift God",
     requiredCoin: 500000,
     earnByTap: 10,
     earnToLevelUp: 10000,

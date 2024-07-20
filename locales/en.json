@@ -3,11 +3,11 @@
     "level": "Level"
   },
   "Navigation": {
-    "friends": "Friends",
+    "friends": "Frens",
     "clicker": "Clicker",
     "mine": "Mine",
     "earn": "Earn",
-    "airdrop": "Airdrop"
+    "airdrop": "Griftdrop"
   },
   "Clicker": {
     "Top": {
@@ -16,7 +16,7 @@
       "profitPerHour": "Profit per hour"
     },
     "Bottom": {
-      "boost": "Boost",
+      "boost": "$GRIFT Boost",
       "energy": "Energy"
     }
   },
@@ -25,12 +25,12 @@
     "txt": "Mobile gaming rocks!"
   },
   "ModalWork": {
-    "title": "The exchange has started working for you:",
+    "title": "The grift started:",
     "button": "Get It"
   },
   "Friends": {
-    "title": "Invite Friends!",
-    "txt": "You & Yours Friends will Receive Bonuses.",
+    "title": "Invite Frens!",
+    "txt": "You & Your Frens will Receive Grifty Bonuses.",
     "copied": "The URL has been copied successfully!",
     "list": {
       "title": "List of your friends",

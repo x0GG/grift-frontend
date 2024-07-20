@@ -34,10 +34,10 @@ export const TopGame = ({ ...props }: React.HTMLAttributes<HTMLDivElement>) => {
         title={t("earnToLvlUp")}
         coins={`${formatBigNumber(currentLevel.earnToLevelUp)}`}
       />
-      <Card
+      {/* <Card
         title={t("profitPerHour")}
         coins={`+${currentLevel.profitByHour}`}
-      />
+      /> */}
     </div>
   )
 }

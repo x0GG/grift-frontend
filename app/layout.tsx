@@ -33,8 +33,8 @@ export const viewport: Viewport = {
 }
 
 export async function generateMetadata() {
-  const title = "Clicker"
-  const description = "test"
+  const title = "The Big Grift"
+  const description = "Alpha Version V0.37"
 
   return MetadataSeo({ title, description })
 }

@@ -140,7 +140,7 @@ export const Boost = () => {
 
   const boosters: CardBoostProps[] = [
     {
-      title: "Multi Kick",
+      title: "Grifty Shrimp Kick",
       subtitle: "Max level reached",
       description: "Sed quid est quod in hac causa maxime homines admirentur.",
       price: 1000,
@@ -156,7 +156,7 @@ export const Boost = () => {
       )
     },
     {
-      title: "Power Limit",
+      title: "Grifty Dolphin Kick",
       subtitle: "Max level reached",
       description: "Sed quid est quod in hac causa maxime homines admirentur.",
       price: 1000,
@@ -172,7 +172,7 @@ export const Boost = () => {
       )
     },
     {
-      title: "Speed Amplifier",
+      title: "Grifty Whale Kick",
       subtitle: "2 Level",
       description:
         "Increase the speed at which energy recharges (+1 per second per level)",
@@ -205,8 +205,8 @@ export const Boost = () => {
         <Modal onClose={() => setIsOpen(false)} className={styles.modal}>
           <div className={styles.modalTop}>
             <Heading
-              title="Buy a Boost"
-              txt="Your share balance:"
+              title="Get a $GRIFT Boooost"
+              txt="Your grift points balance:"
               className={styles.heading}
             />
             <TotalCoins />
@@ -220,7 +220,7 @@ export const Boost = () => {
             </div>
           </div>
           <div className={styles.section}>
-            <Title>Boosters:</Title>
+            <Title>$GRIFT Boosters:</Title>
             <div className={clsx(styles.list, styles.listFull)}>
               {boosters.map((booster, index) => (
                 <CardBoost key={index} {...booster} />

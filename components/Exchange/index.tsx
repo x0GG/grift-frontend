@@ -15,7 +15,7 @@ export const Exchange = () => {
   const { exchange, setExchange } = useUserStore()
 
   let exchangeInfo: ExchangeProps = {
-    name: "Exchange",
+    name: "Team",
     logo: <img src={`${HOST}/img/base-token.png`} alt="clicker" />
   }
 
@@ -38,8 +38,8 @@ export const Exchange = () => {
       {isOpen && (
         <Modal onClose={() => setIsOpen(false)} className={styles.modal} full>
           <Heading
-            title="Choose an exchange platform"
-            txt="To take full advantage of our application."
+            title="Choose a sick meme character"
+            txt="Your chosen character will be with you during your grift mission!"
           />
           <ul className={styles.list}>
             {exchanges.map(({ name, logo }, index) => (

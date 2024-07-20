@@ -22,7 +22,7 @@ const CardSpecial = ({ title, amount }: CardSpecialProps) => {
       <div>
         <h3>{title}</h3>
         <span>
-          <strong>+{amount}</strong> For you & your friend
+          <strong>+{amount}</strong> For you & your fren
         </span>
       </div>
     </div>
@@ -64,10 +64,10 @@ export default function Page() {
           onClick={copy}
         />
       </ButtonGroup>
-      <CardSpecial title="Invite a friend" amount={5000} />
+      <CardSpecial title="Invite a fren" amount={5000} />
       <CardSpecial
-        title="Invite a friend with telegram premium"
-        amount={5000}
+        title="Invite a fren with Telegram Premium"
+        amount={10000}
       />
       <div className={styles.list}>
         <div className={styles.listTop}>

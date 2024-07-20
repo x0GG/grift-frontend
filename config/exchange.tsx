@@ -7,15 +7,15 @@ export interface ExchangeProps {
 
 export const exchanges: ExchangeProps[] = [
   {
-    name: "Binance",
+    name: "Normie",
     logo: <img src={`${HOST}/img/exchange/binance.svg`} loading="lazy" alt="Binance" />
   },
   {
-    name: "Bybit",
+    name: "Psycho",
     logo: <img src={`${HOST}/img/exchange/bybit.svg`} loading="lazy" alt="Bybit" />
   },
   {
-    name: "OKX",
+    name: "Schizo",
     logo: <img src={`${HOST}/img/exchange/okx.svg`} loading="lazy" alt="OKX" />
   }
 ]

@@ -12,7 +12,7 @@ export const User = () => {
     <div className={styles.left}>
       <Avatar src={``} name={name} level={level} />
       <div className={styles.name}>
-        {name} <small>($GRIFTer)</small>
+        {name} <small>(Grifter)</small>
       </div>
     </div>
   )

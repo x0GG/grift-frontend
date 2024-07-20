@@ -4,10 +4,10 @@ export default function Page() {
   return (
     <>
       <Heading
-        title="Airdrop Tasks"
-        txt="Listing is on its way. Taks will appear below. Complete them to participate in the airdrop."
+        title="Griftdrop Tasks"
+        txt=""
       />
-      <div className={styles.coming}>Coming soon...</div>
+      <div className={styles.coming}>Cumin soon…</div>
     </>
   )
 }

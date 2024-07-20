@@ -51,7 +51,7 @@ export const Nav = () => {
           <Sprite id="earn" viewBox="0 0 30 24" />
         </NavLink>
         <NavLink to="/airdrop" title={t("airdrop")}>
-          <Coin />
+          <Coin min={true} />
         </NavLink>
       </ul>
       <Sprite id="nav-corner" viewBox="0 0 127 33" className={styles.corner} />

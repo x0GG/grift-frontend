@@ -59,7 +59,7 @@ export default function Page() {
 
   return (
     <Content>
-      <Heading title="Earn More Coins" txt="Complete tasks to earn coins." />
+      <Heading title="Earn More Points" txt="Complete tasks to earn points." />
       <Daily />
       <Title>Tasks List</Title>
       <div className={styles.list}>

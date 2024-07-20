@@ -23,7 +23,7 @@ export const useUserStore = create<UserStore>(
   // @ts-ignore
   persist(
     (set, get) => ({
-      name: "Username",
+      name: "User name",
       level: 1,
       totalCoins: 0,
       coins: 0,
