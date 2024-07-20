@@ -10,7 +10,7 @@ export const User = () => {
 
   return (
     <div className={styles.left}>
-      <Avatar src={`${HOST}/img/coins/bronze.png`} name={name} level={level} />
+      <Avatar src={``} name={name} level={level} />
       <div className={styles.name}>
         {name} <small>($GRIFTer)</small>
       </div>
