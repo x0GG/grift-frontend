@@ -2,6 +2,7 @@
 
 import { useGame } from "@/hooks/useGame"
 import { Avatar } from "../Avatar"
+import { HOST } from "@/config/constants"
 import styles from "./User.module.scss"
 
 export const User = () => {
@@ -9,7 +10,7 @@ export const User = () => {
 
   return (
     <div className={styles.left}>
-      <Avatar src="/images/avatar.jpg" name={name} level={level} />
+      <Avatar src={`${HOST}/images/avatar.jpg`} name={name} level={level} />
       <div className={styles.name}>
         {name} <small>($GRIFTer)</small>
       </div>

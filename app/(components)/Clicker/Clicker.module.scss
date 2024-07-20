@@ -13,7 +13,7 @@
     z-index: 0;
     inset: 0 calc(var(--main-padding) * -1);
     bottom: 0;
-    background: url(/img/background.png) top center/cover no-repeat;
+    background: url(https://x0gg.github.io/grift-frontend/img/background.png) top center/cover no-repeat;
     @include mask(linear-gradient(to top, #000000 50%, rgba(0, 0, 0, 0)) 100%);
   }
 }
