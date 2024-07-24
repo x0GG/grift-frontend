@@ -6,6 +6,17 @@
   margin: calc(var(--main-padding) * -1) 0;
 }
 
+// rotating animation when class .rotating is added
+.rotating {
+  animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .special {
   --padding: calc(var(--main-padding) / 1.5);
   padding: var(--padding);

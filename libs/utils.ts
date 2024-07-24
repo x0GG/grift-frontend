@@ -49,3 +49,5 @@ export const constructName = (firstName: string | undefined, lastName: string | 
 
   return 'Anonymous';
 }
+
+export const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))

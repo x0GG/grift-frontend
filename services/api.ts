@@ -89,6 +89,9 @@ const processUserData = (userData: UserDataResponse): UserData => {
 }
 
 const getInitDataString = () => {
+    if (process.env.NEXT_PUBLIC_NODE_ENV === "development") {
+        return "development";
+    }
     return useLaunchParamsStore.getState().launchParams?.initDataRaw || "";
 }
 

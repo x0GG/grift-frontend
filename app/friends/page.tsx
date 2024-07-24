@@ -11,7 +11,7 @@ import { HOST } from "@/config/constants"
 import { useUserDataStore } from "@/stores/userData"
 import { useInvitedStore } from "@/stores/invited"
 import api from "@/services/api"
-import { constructName } from "@/libs/utils"
+import { constructName, delay } from "@/libs/utils"
 import styles from "./friends.module.scss"
 
 const amounts = {
@@ -55,6 +55,7 @@ const CardFriend = ({ title, isPremium }: { title: string, isPremium: boolean}) 
 export default function Page() {
   const t = useTranslations("Friends")
   const [copied, setCopied] = useState(false)
+  const [pending, setPending] = useState(false)
   const { userData } = useUserDataStore()
   const { invited } = useInvitedStore()
 
@@ -68,8 +69,20 @@ export default function Page() {
     setTimeout(() => setCopied(false), 4000)
   }
 
+  const handleRefresh = async () => {
+    if (pending) return
+    setPending(true)
+    await api.invited()
+    await delay(500)
+    setPending(false)
+  }
+
   useEffect(() => {
-    api.invited()
+    setPending(true)
+    api.invited().finally(async () => {
+      await delay(500)
+      setPending(false)
+    })
   }, [])
 
   return (
@@ -109,7 +122,7 @@ export default function Page() {
           <Title className={styles.listTitle}>
             {t("list.title")} <small>({invited.length})</small>
           </Title>
-          <Icon icon="ph:arrows-clockwise" onClick={() => api.invited()} />
+          <Icon icon="ph:arrows-clockwise" className={pending ? styles.rotating : ''} onClick={handleRefresh} />
         </div>
         {invited.map((i, index) => (
           <CardFriend key={index} title={constructName(i.firstName, i.lastName, i.username)} isPremium={i.isPremium} />

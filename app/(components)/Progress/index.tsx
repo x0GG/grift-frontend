@@ -15,7 +15,7 @@ export const Progress = () => {
 
 
   const nextRequiredCoin = nextLevel.requiredCoin
-  const progressPercent = maxLevel ? BigInt(100) : (coins / BigInt(nextRequiredCoin)) * BigInt(100)
+  const progressPercent = maxLevel ? BigInt(100) : (coins * BigInt(100) / BigInt(nextRequiredCoin))
 
   return (
     <div className={styles.progress}>
