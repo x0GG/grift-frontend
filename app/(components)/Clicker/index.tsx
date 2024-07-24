@@ -25,7 +25,7 @@ const Game = () => {
   const { setBalance, energy, setEnergy, currentLevel, earnPerTap, balance } = useGame()
   const feedBackRef = useRef<HTMLDivElement>(null)
   const gameRef = useRef<HTMLDivElement>(null)
-  const { impactOccurred } = useHapticFeedback()
+  const hapticFeedback = useHapticFeedback(true)
 
   const debouncedTap = useDebouncedCallback(t => {
     api.tap(t)
@@ -80,8 +80,8 @@ const Game = () => {
       toast.error("Not enough energy")
     }
 
-    if (vibration) {
-      impactOccurred('light')
+    if (hapticFeedback && vibration) {
+      hapticFeedback.impactOccurred('light')
     }
 
     if (tapAnimation) {

@@ -70,11 +70,11 @@ export const CardEarn = ({
   const { illu, title, buttonText } = taskInfo[task.type];
   const [pending, setPending] = useState(false);
   const { setCompleted, setClaimed } = useEarnTasksStore();
-  const utils = useUtils();
+  const utils = useUtils(true);
 
 
   const openLink = async () => {
-    utils.openLink(task.link);
+    utils?.openLink(task.link);
 
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -85,7 +85,7 @@ export const CardEarn = ({
   }
 
   const openTelegramLink = async () => {
-    utils.openTelegramLink(task.link);
+    utils?.openTelegramLink(task.link);
     await api.claimEarnTask(task.id);
   }
 
