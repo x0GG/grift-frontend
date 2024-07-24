@@ -4,7 +4,7 @@ import { Coin } from "@/components/Coin"
 import { Heading } from "@/components/Heading"
 import { Icon } from "@/components/Icon"
 import { Title } from "@/components/Kit"
-import { Token3D } from "@/components/Token3D"
+// import { Token3D } from "@/components/Token3D"
 import { levels } from "@/config/levels"
 import { useGame } from "@/hooks/useGame"
 import { useLevel } from "@/hooks/useLevel"
@@ -14,7 +14,7 @@ import { HOST } from "@/config/constants"
 
 export default function Page() {
   const { level } = useGame()
-  const [showLevel, setShowLevel] = useState(level)
+  const [showLevel, setShowLevel] = useState(level ?? 1)
   const infoLevel = useLevel(showLevel)
 
   return (

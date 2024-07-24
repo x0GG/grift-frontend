@@ -8,43 +8,51 @@ import { formatBigNumber } from "@/libs/utils"
 import clsx from "clsx"
 import { useState } from "react"
 import { HOST } from "@/config/constants"
+import { useUserDataStore } from "@/stores/userData"
+import api from "@/services/api"
 import styles from "./Daily.module.scss"
+
+const dates = [
+  {
+    reward: 20
+  },
+  {
+    reward: 40
+  },
+  {
+    reward: 100
+  },
+  {
+    reward: 200
+  },
+  {
+    reward: 400
+  },
+  {
+    reward: 800
+  },
+  {
+    reward: 1500
+  },
+  {
+    reward: 3000
+  },
+  {
+    reward: 5000
+  },
+  {
+    reward: 10000
+  }
+]
 
 export const Daily = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const { userData } = useUserDataStore()
 
-  const dates = [
-    {
-      reward: 20
-    },
-    {
-      reward: 40
-    },
-    {
-      reward: 100
-    },
-    {
-      reward: 200
-    },
-    {
-      reward: 400
-    },
-    {
-      reward: 800
-    },
-    {
-      reward: 1500
-    },
-    {
-      reward: 3000
-    },
-    {
-      reward: 5000
-    },
-    {
-      reward: 10000
-    }
-  ]
+  console.log(userData?.lastDailyClaimTimestamp)
+  const isClaimed = userData ? Date.now() - userData.lastDailyClaimTimestamp <= 84000 : true
+  console.log(isClaimed)
+  const currentDay = userData ? userData.dailyStreak : 0
 
   return (
     <>
@@ -90,8 +98,8 @@ export const Daily = () => {
               <li
                 key={i}
                 className={clsx(styles.date, {
-                  [styles.ok]: i === 0,
-                  [styles.active]: i === 1 || i === 2
+                  [styles.ok]: i === currentDay,
+                  [styles.active]: i < currentDay,
                 })}
               >
                 <span className={styles.day}>Day {i + 1}</span>
@@ -99,7 +107,13 @@ export const Daily = () => {
               </li>
             ))}
           </ul>
-          <Button className={styles.button}>Claim reward</Button>
+          <Button
+            className={styles.button}
+            disabled={!isClaimed}
+            onClick={() => {
+              api.claimDaily()
+            }}
+          >Claim reward</Button>
         </Modal>
       )}
     </>

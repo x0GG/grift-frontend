@@ -1,7 +1,6 @@
 import { ENERGY_BASE } from "@/config/constants"
 import { levels } from "@/config/levels"
 import { create } from "zustand"
-import { persist } from "zustand/middleware"
 
 type UserStore = {
   name: string
@@ -20,8 +19,6 @@ type UserStore = {
 }
 
 export const useUserStore = create<UserStore>(
-  // @ts-ignore
-  persist(
     (set, get) => ({
       name: "User name",
       level: 1,
@@ -56,9 +53,5 @@ export const useUserStore = create<UserStore>(
       reset: () => {
         set(() => ({ coins: 0, totalCoins: 0, level: 1, energy: ENERGY_BASE }))
       }
-    }),
-    {
-      name: "user"
-    }
-  )
+    })
 )

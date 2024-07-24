@@ -1,6 +1,8 @@
 "use client"
 
-import { Token3D } from "@/components/Token3D"
+// import { Token3D } from "@/components/Token3D"
+import { useState } from 'react'
+import { useDebouncedCallback } from 'use-debounce'
 import { TopGame } from "@/components/TopGame"
 import { TotalCoins } from "@/components/TotalCoins"
 import { DURATION_FEEDBACK, HOST } from "@/config/constants"
@@ -12,15 +14,23 @@ import { Boost } from "../Boost"
 import { Energy } from "../Energy"
 import { Progress } from "../Progress"
 import styles from "./Clicker.module.scss"
+import { useHapticFeedback } from '@telegram-apps/sdk-react'
+import api from '@/services/api'
 
-const maxTouches = 2
+const maxTouches = 10
 
 const Game = () => {
+  const [taps, setTaps] = useState(0)
   const { vibration, tapAnimation, numberAnimaton } = useSettingsStore()
-  const { addCoin, energy, removeEnergy, earnByTap, currentLevel, reset } =
-    useGame()
+  const { setBalance, energy, setEnergy, currentLevel, earnPerTap, balance } = useGame()
   const feedBackRef = useRef<HTMLDivElement>(null)
   const gameRef = useRef<HTMLDivElement>(null)
+  const { impactOccurred } = useHapticFeedback()
+
+  const debouncedTap = useDebouncedCallback(t => {
+    api.tap(t)
+    setTaps(0)
+  }, 500)
 
   const addFeedBack = (n: number, e: React.TouchEvent<HTMLDivElement>) => {
     if (!gameRef.current || !feedBackRef.current) return
@@ -58,16 +68,20 @@ const Game = () => {
   }
 
   const handleClickStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (energy >= earnByTap) {
-      addFeedBack(earnByTap, e)
-      removeEnergy(earnByTap)
-      addCoin(earnByTap)
+    if (energy === undefined || earnPerTap === undefined || balance === undefined) return;
+    if (energy >= earnPerTap) {
+      addFeedBack(earnPerTap, e)
+      setEnergy(energy - BigInt(earnPerTap))
+      setBalance(balance + BigInt(earnPerTap))
+      const newTaps = taps + 1
+      setTaps(newTaps)
+      debouncedTap(newTaps)
     } else {
       toast.error("Not enough energy")
     }
 
-    if (navigator.vibrate && vibration) {
-      navigator.vibrate(100)
+    if (vibration) {
+      impactOccurred('light')
     }
 
     if (tapAnimation) {

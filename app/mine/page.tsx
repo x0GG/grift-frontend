@@ -130,7 +130,8 @@ export default function Page() {
     <Content>
       <TotalCoins className={styles.total} />
       <TopGame />
-      <div className={styles.tab}>
+      <div className={styles.coming}>Cumin soon…</div>
+      {/* <div className={styles.tab}>
         <div className={styles.tabNav}>
           {tabs.map((tab) => (
             <button
@@ -155,7 +156,7 @@ export default function Page() {
               </div>
             )
         )}
-      </div>
+      </div> */}
     </Content>
   )
 }

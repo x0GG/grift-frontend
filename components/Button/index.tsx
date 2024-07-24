@@ -18,6 +18,7 @@ export interface ButtonProps {
   className?: string
   type?: Types
   onClick?: () => void
+  disabled?: boolean
 }
 
 export const Button = ({
@@ -27,6 +28,7 @@ export const Button = ({
   className,
   onClick,
   type = "primary",
+  disabled,
   ...props
 }: ButtonProps) => {
   const Content = (
@@ -71,6 +73,7 @@ export const Button = ({
   } else {
     return (
       <button
+        disabled={disabled}
         {...(props as ButtonHTMLAttributes<HTMLButtonElement>)}
         {...attrs}
       >

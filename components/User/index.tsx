@@ -4,9 +4,12 @@ import { useGame } from "@/hooks/useGame"
 import { Avatar } from "../Avatar"
 import { HOST } from "@/config/constants"
 import styles from "./User.module.scss"
+import { constructName } from "@/libs/utils"
 
 export const User = () => {
-  const { name, level } = useGame()
+  const { username, firstName, lastName, level } = useGame()
+
+  const name = constructName(firstName, lastName, username)
 
   return (
     <div className={styles.left}>

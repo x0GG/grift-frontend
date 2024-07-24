@@ -24,8 +24,9 @@ export const CardMine = ({
   price,
   required
 }: CardMineProps) => {
-  const { coins } = useGame()
+  const { balance } = useGame()
   const [isOpen, setIsOpen] = useState(false)
+  const coins = balance ? BigInt(balance) : BigInt(0)
 
   const Illu = (
     <div className={styles.illu}>

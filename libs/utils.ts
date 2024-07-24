@@ -33,3 +33,19 @@ export const scrollRestoration = () => {
   const mainContainer = ref("main")
   mainContainer?.scrollTo({ top: 0, behavior: "smooth" })
 }
+
+export const constructName = (firstName: string | undefined, lastName: string | undefined, username: string | undefined) => {
+  if (firstName && lastName) {
+    return `${firstName} ${lastName}`
+  }
+
+  if (firstName) {
+    return firstName
+  }
+
+  if (username) {
+    return username
+  }
+
+  return 'Anonymous';
+}

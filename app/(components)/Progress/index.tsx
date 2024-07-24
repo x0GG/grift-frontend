@@ -10,11 +10,12 @@ import styles from "./Progress.module.scss"
 
 export const Progress = () => {
   const t = useTranslations("All")
-  const { maxLevel, totalCoins, level, coins, currentLevel, nextLevel } =
-    useGame()
+  const { maxLevel, level, balance, currentLevel, nextLevel } = useGame()
+  const coins = balance ? BigInt(balance) : BigInt(0)
+
 
   const nextRequiredCoin = nextLevel.requiredCoin
-  const progressPercent = maxLevel ? 100 : (totalCoins / nextRequiredCoin) * 100
+  const progressPercent = maxLevel ? BigInt(100) : (coins / BigInt(nextRequiredCoin)) * BigInt(100)
 
   return (
     <div className={styles.progress}>
@@ -28,17 +29,17 @@ export const Progress = () => {
             <small>{t("level")}</small> {level} / {levels.length}
           </div>
         </div>
-        <Coin level={level} />
+        <Coin level={level ?? 1} />
         <div className={styles.xpBar}>
           <div
             className={styles.xpBarProgress}
             style={{ width: progressPercent + "%" }}
           />
         </div>
-        <Coin level={level + 1} />
+        <Coin level={(level ?? 1) + 1} />
         {!maxLevel && (
           <small className={styles.xpCurrent}>
-            {totalCoins} / {nextRequiredCoin}
+            {coins.toString()} / {nextRequiredCoin}
           </small>
         )}
       </div>

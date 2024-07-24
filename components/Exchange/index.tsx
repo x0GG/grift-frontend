@@ -1,7 +1,7 @@
 "use client"
 
 import { ExchangeProps, exchanges } from "@/config/exchange"
-import { useUserStore } from "@/stores/user"
+import { useUserDataStore } from "@/stores/userData"
 import clsx from "clsx"
 import { useState } from "react"
 import { Heading } from "../Heading"
@@ -9,22 +9,26 @@ import { Icon } from "../Icon"
 import { Modal } from "../Modal"
 import styles from "./Exchange.module.scss"
 import { HOST } from "@/config/constants"
+import api from "@/services/api"
 
 export const Exchange = () => {
-  const [isOpen, setIsOpen] = useState(false)
-  const { exchange, setExchange } = useUserStore()
+  const [isOpen, setIsOpen] = useState(false);
+  const { userData, setUserDataTeamId } = useUserDataStore();
+
+  const exchange = userData ? userData.teamId : -1;
 
   let exchangeInfo: ExchangeProps = {
     name: "Team",
     logo: <img src={`${HOST}/img/base-token.png`} alt="clicker" />
   }
 
-  if (exchange >= 0) {
+  if (exchange >= 0 && exchange < exchanges.length) {
     exchangeInfo = exchanges[exchange]
   }
 
   const handleExchange = (index: number) => {
-    setExchange(index)
+    setUserDataTeamId(index)
+    api.setTeam(index)
     setIsOpen(false)
   }
 

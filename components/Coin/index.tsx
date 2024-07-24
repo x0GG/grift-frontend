@@ -17,7 +17,7 @@ export const Coin = ({ level, min, ...props }: CoinProps) => {
     currentLevel = level
   }
 
-  const info = useLevel(currentLevel)
+  const info = useLevel(currentLevel ?? 1)
 
   return (
     <img

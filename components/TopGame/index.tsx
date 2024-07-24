@@ -24,15 +24,15 @@ const Card = ({ title, coins }: CardProps) => {
 }
 
 export const TopGame = ({ ...props }: React.HTMLAttributes<HTMLDivElement>) => {
-  const { earnByTap, currentLevel } = useGame()
+  const { earnPerTap, currentLevel, nextLevel } = useGame()
   const t = useTranslations("Clicker.Top")
 
   return (
     <div {...props} className={clsx(styles.top, props.className)}>
-      <Card title={t("earnByTap")} coins={`+${earnByTap}`} />
+      <Card title={t("earnByTap")} coins={`+${earnPerTap ?? 1}`} />
       <Card
         title={t("earnToLvlUp")}
-        coins={`${formatBigNumber(currentLevel.earnToLevelUp)}`}
+        coins={`${formatBigNumber(nextLevel.requiredCoin)}`}
       />
       {/* <Card
         title={t("profitPerHour")}

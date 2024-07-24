@@ -73,8 +73,8 @@ export default async function RootLayout({ children }: RootLayoutProps) {
             />
           </div>
           <div id="modal-root" />
-          <NoMobile />
-          <ModalWork />
+          {/* <NoMobile /> */}
+          {/* <ModalWork /> */}
         </NextIntlClientProvider>
       </body>
     </html>

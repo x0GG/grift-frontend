@@ -61,6 +61,11 @@
   border-radius: var(--radius-2);
   gap: var(--padding);
 
+  &[aria-disabled="true"] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
   .illu {
     --size: calc(42px + 10 * (100vw - 320px) / 1080);
     width: var(--size);

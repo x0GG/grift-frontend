@@ -9,13 +9,14 @@ import styles from "./TotalCoins.module.scss"
 interface TotalCoinsProps extends HTMLAttributes<HTMLDivElement> {}
 
 export const TotalCoins = ({ ...props }: TotalCoinsProps) => {
-  const { level, coins } = useGame()
+  const { level, balance } = useGame()
+  const coins = balance ? BigInt(balance) : BigInt(0)
 
   return (
     <div {...props} className={clsx(styles.total, props.className)}>
       <div>
         <Coin level={level} min />
-        {coins}
+        {coins.toString()}
       </div>
     </div>
   )
