@@ -50,7 +50,7 @@ export const Daily = () => {
   const { userData } = useUserDataStore()
 
   console.log(userData?.lastDailyClaimTimestamp)
-  const isClaimed = userData ? Date.now() - userData.lastDailyClaimTimestamp <= 84000 : true
+  const isClaimed = userData ? Date.now()/1000 - userData.lastDailyClaimTimestamp <= 84000 : true
   console.log(isClaimed)
   const currentDay = userData ? userData.dailyStreak : 0
 
@@ -109,7 +109,7 @@ export const Daily = () => {
           </ul>
           <Button
             className={styles.button}
-            disabled={!isClaimed}
+            disabled={isClaimed}
             onClick={() => {
               api.claimDaily()
             }}

@@ -107,7 +107,7 @@ export default function Page() {
       <div className={styles.list}>
         <div className={styles.listTop}>
           <Title className={styles.listTitle}>
-            {t("list.title")} <small>(invited.length)</small>
+            {t("list.title")} <small>({invited.length})</small>
           </Title>
           <Icon icon="ph:arrows-clockwise" onClick={() => api.invited()} />
         </div>
