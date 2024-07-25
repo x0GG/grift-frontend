@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "ngrok": "ngrok http --domain=marten-stirred-bulldog.ngrok-free.app 3000"
+    "lint": "next lint"
   },
   "dependencies": {
     "@gsap/react": "^2.1.1",
