@@ -7,6 +7,7 @@ import { useGame } from "@/hooks/useGame"
 import { useTranslations } from "next-intl"
 import Link from "next/link"
 import styles from "./Progress.module.scss"
+import { formatBigNumber } from "@/libs/utils"
 
 export const Progress = () => {
   const t = useTranslations("All")
@@ -39,7 +40,7 @@ export const Progress = () => {
         <Coin level={(level ?? 1) + 1} />
         {!maxLevel && (
           <small className={styles.xpCurrent}>
-            {coins.toString()} / {nextRequiredCoin}
+            {formatBigNumber(coins)} / {formatBigNumber(nextRequiredCoin)}
           </small>
         )}
       </div>

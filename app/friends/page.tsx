@@ -7,17 +7,17 @@ import { Content, Title } from "@/components/Kit"
 import { useTranslations } from "next-intl"
 import { useState, useEffect } from "react"
 import { toast } from "sonner"
-import { HOST } from "@/config/constants"
 import { useUserDataStore } from "@/stores/userData"
 import { useInvitedStore } from "@/stores/invited"
 import api from "@/services/api"
-import { constructName, delay } from "@/libs/utils"
+import { constructName, delay, formatBigNumber } from "@/libs/utils"
+import { HOST, referralBonus, referralBonusPerLevel } from "@/config/constants"
+import { LevelUpBonus } from "./(components)/LevelUpBonus"
+import { Coin } from "@/components/Coin"
+import { useLevel } from "@/hooks/useLevel"
 import styles from "./friends.module.scss"
 
-const amounts = {
-  regular: 5000,
-  premium: 10000,
-}
+
 
 interface CardSpecialProps {
   title: string
@@ -27,7 +27,7 @@ interface CardSpecialProps {
 const CardSpecial = ({ title, amount }: CardSpecialProps) => {
   return (
     <div className={styles.special}>
-      <img src={`${HOST}/img/gift.png`} width={732} height={796} alt={title} />
+      <img src={HOST + "/img/gift.png"} width={732} height={796} alt={title} />
       <div>
         <h3>{title}</h3>
         <span>
@@ -38,15 +38,26 @@ const CardSpecial = ({ title, amount }: CardSpecialProps) => {
   )
 }
 
-const CardFriend = ({ title, isPremium }: { title: string, isPremium: boolean}) => {
+interface CardReferralProps {
+  title: string
+  level: number
+  profit: number
+}
+
+const CardReferral = ({ title, level, profit }: CardReferralProps) => {
+  const levelName = useLevel(level).name;
+
   return (
     <div className={styles.special}>
-      <img src={`${HOST}/img/hugs.jpeg`} width={732} height={796} alt={title} />
-      <div>
-        <h3>{title}</h3>
-        <span>
-          <strong>+{isPremium ? amounts.premium : amounts.regular }</strong>
-        </span>
+      <img src={HOST + "/img/hugs.jpeg"} width={732} height={796} alt={title} />
+      <div className={styles.referral}>
+        <div>
+          <h3>{title}</h3>
+          <span>{levelName}</span>
+        </div>
+        <div>
+          <h3><Coin min />&nbsp;+{formatBigNumber(BigInt(profit))}</h3>
+        </div>
       </div>
     </div>
   )
@@ -56,10 +67,11 @@ export default function Page() {
   const t = useTranslations("Friends")
   const [copied, setCopied] = useState(false)
   const [pending, setPending] = useState(false)
+  const [showBonuses, setShowBonuses] = useState(false);
   const { userData } = useUserDataStore()
-  const { invited } = useInvitedStore()
+  const { invited, total } = useInvitedStore()
 
-  const inviteLink = userData ? `${process.env.NEXT_PUBLIC_TELEGRAM_APP_URL}?startapp=${userData.refferalCode}` : `${process.env.NEXT_PUBLIC_TELEGRAM_APP_URL}`
+  const inviteLink = userData ? `${process.env.NEXT_PUBLIC_TELEGRAM_APP_URL}?startapp=${userData.referralCode}` : `${process.env.NEXT_PUBLIC_TELEGRAM_APP_URL}`
 
   const copy = () => {
     if (copied) return
@@ -92,7 +104,7 @@ export default function Page() {
         txt={t("txt")}
         top={
           <img
-            src={`${HOST}/img/gift.png`}
+            src={HOST + "/img/gift.png"}
             width={732}
             height={796}
             alt="Gift"
@@ -112,20 +124,27 @@ export default function Page() {
           onClick={copy}
         />
       </ButtonGroup>
-      <CardSpecial title="Invite a fren" amount={amounts.regular} />
+      <CardSpecial title="Invite a fren" amount={referralBonus.regular} />
       <CardSpecial
-        title="Invite a fren with Telegram Premium"
-        amount={amounts.premium}
+        title="Invite a fren with telegram premium"
+        amount={referralBonus.premium}
       />
+      {/* {!showBonuses && <h6 className={styles.bonuses} onClick={() => setShowBonuses(true)}>More bonuses</h6>}
+      {showBonuses && <LevelUpBonus />} */}
       <div className={styles.list}>
         <div className={styles.listTop}>
           <Title className={styles.listTitle}>
-            {t("list.title")} <small>({invited.length})</small>
+            {t("list.title")} <small>({total})</small>
           </Title>
           <Icon icon="ph:arrows-clockwise" className={pending ? styles.rotating : ''} onClick={handleRefresh} />
         </div>
         {invited.map((i, index) => (
-          <CardFriend key={index} title={constructName(i.firstName, i.lastName, i.username)} isPremium={i.isPremium} />
+          <CardReferral
+            key={index}
+            title={constructName(i.firstName, i.lastName, i.username)}
+            level={i.level}
+            profit={i.reward}
+          />
         ))}
         {invited.length === 0 && <div className={styles.listNo}>{t("list.no")}</div>}
       </div>

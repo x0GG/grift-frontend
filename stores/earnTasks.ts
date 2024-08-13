@@ -8,14 +8,16 @@ export enum EarnTaskType {
   DISCORD = 'discord',
   TIKTOK = 'tiktok',
   REDDIT = 'reddit',
-  YTMUSIC = 'ytmusic'
+  YTMUSIC = 'ytmusic',
+  YOUTUBE_WATCH = 'youtube_watch',
 }
 
 export type EarnTask = {
   id: number;
   link: string;
   type: EarnTaskType;
-  reward: number;
+  reward: bigint;
+  order: number;
   isCompleted: boolean;
   isClaimed: boolean;
 }

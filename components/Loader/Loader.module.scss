@@ -1,0 +1,27 @@
+.loader {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    inset: 0;
+    z-index: 99999;
+    background-color: #050811;
+    background-image: url('/img/coins/bronze.png');
+    background-size: center;
+    background-position: center;
+    background-repeat: no-repeat;
+    text-align: center;
+    padding: 30px;
+}
+
+.top, .bottom {
+    display: flex;
+    justify-content: center;
+    padding: auto;
+    
+    img {
+        display: block;
+        width: 80%;
+    }
+}

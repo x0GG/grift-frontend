@@ -1,5 +1,10 @@
 import { create } from "zustand"
 
+export type PurchasedMiningCards = {
+  id: number;
+  level: number;
+}
+
 export type UserData = {
   telegramId: string;
   firstName: string;
@@ -8,27 +13,29 @@ export type UserData = {
   languageCode: string;
   isPremium: boolean;
   allowsWriteToPm: boolean;
-  refferalCode: string;
+  referralCode: string;
   profilePicture: string;
   balance: bigint;
   energy: bigint;
   level: number;
   earnByTapBoosterLevel: number;
-  energyPerSecondBoosterLevel: number;
   maxEnergyBoosterLevel: number;
   earnPerHourBonus: string;
   lastEnergyUpdateTimestamp: number;
   lastTapTimestamp: number;
   lastDailyClaimTimestamp: number;
-  prevDailyClaimTimestamp: number;
   dailyStreak: number;
   lastFullEnergyBonusTimestamp: number;
+  firstFullEnergyBonusTimestamp: number;
   fullEnergyBonusCount: number;
   teamId: number;
   earnTaskIds: number[];
-  maxEnergy: number;
+  maxEnergy: bigint;
   energyPerSecond: number;
   earnPerTap: number;
+  earnPerHour: bigint;
+  purchasedMiningCards: PurchasedMiningCards[];
+  lastBalanceByMiningUpdateTimestamp: number;
 } | null;
 
 type UserDataStore = {

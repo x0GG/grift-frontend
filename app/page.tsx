@@ -11,7 +11,7 @@ const getLaunchParams = () => {
   try {
     result = retrieveLaunchParams();
   } catch (e) {
-    console.error("Failed to get init data", e);
+    console.log("Failed to get init data", e);
   }
   return result;
 }

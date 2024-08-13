@@ -6,132 +6,60 @@ import { TotalCoins } from "@/components/TotalCoins"
 import { scrollRestoration } from "@/libs/utils"
 import clsx from "clsx"
 import { useTranslations } from "next-intl"
-import { useState } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { CardMine, CardMineProps } from "./(components)/CardMine"
-import { HOST } from "@/config/constants"
+import api from "@/services/api"
+import { useMiningCardsStore } from "@/stores/miningCards"
 import styles from "./mine.module.scss"
+import { HOST } from "@/config/constants"
+
+type Tab = {
+  id: string
+  title: string
+}
 
 export default function Page() {
   const t = useTranslations("Mine")
-  const [activeTab, setActiveTab] = useState("markets")
+  const [activeTab, setActiveTab] = useState<string | null>(null)
+  const { cards: cardsData } = useMiningCardsStore()
 
-  const tabs = [
-    {
-      id: "markets",
-      title: t("markets")
-    },
-    {
-      id: "web3",
-      title: t("web3")
-    },
-    {
-      id: "license",
-      title: t("license")
-    },
-    {
-      id: "specials",
-      title: t("specials")
-    }
-  ]
+  useEffect(() => {
+    api.getMiningCards();
+  }, [])
 
-  const cards: CardMineProps[] = [
-    {
-      title: "Task Ex 1",
-      illu: `${HOST}/img/mine-1.jpg`,
-      level: 1,
-      profit: 2000,
-      price: 150000
-    },
-    {
-      title: "Task Ex 2",
-      illu: `${HOST}/img/mine-2.jpeg`,
-      level: 1,
-      profit: 20,
-      price: 150
-    },
-    {
-      title: "Task Ex 3",
-      illu: `${HOST}/img/mine-3.jpg`,
-      level: 2,
-      profit: 18,
-      price: 250
-    },
-    {
-      title: "Defi Tokens",
-      illu: "",
-      level: 1,
-      profit: 20,
-      required: "AI Token lvl 5"
-    },
-    {
-      title: "Stable Coins",
-      illu: "",
-      level: 1,
-      profit: 20,
-      required: "Staking lvl 8"
-    },
-    {
-      title: "CMC Top 10",
-      illu: "",
-      level: 1,
-      profit: 20,
-      required: "Stable Coins lvl 2"
-    },
-    {
-      title: "AI Token",
-      illu: "",
-      level: 2,
-      profit: 18,
-      price: 250
-    },
-    {
-      title: "Staking",
-      illu: "",
-      level: 1,
-      profit: 20,
-      price: 150
-    },
-    {
-      title: "Gamefi Tokens",
-      illu: "",
-      level: 1,
-      profit: 20,
-      price: 150
-    },
-    {
-      title: "Defi Tokens",
-      illu: "",
-      level: 1,
-      profit: 20,
-      required: "AI Token lvl 5"
-    },
-    {
-      title: "Stable Coins",
-      illu: "",
-      level: 1,
-      profit: 20,
-      required: "Staking lvl 8"
-    },
-    {
-      title: "CMC Top 10",
-      illu: "",
-      level: 1,
-      profit: 20,
-      required: "Stable Coins lvl 2"
-    }
-  ]
+  const tabs = useMemo(() => {
+    return cardsData.reduce((acc: Tab[], card) => {
+      if (!acc.find((tab) => tab.id === card.groupTag)) {
+        acc.push({
+          id: card.groupTag,
+          title: card.groupName
+        })
+      }
+      return acc
+    }, [])
+  }, [cardsData])
+
+  const cards = useMemo(() => {
+    return cardsData.filter((card) => card.groupTag === activeTab)
+  }, [cardsData, activeTab])
 
   const handleActiveTab = (tab: string) => {
     setActiveTab(tab)
     scrollRestoration()
   }
 
+  useEffect(() => {
+    if (tabs.length > 0 && !activeTab) {
+      setActiveTab(tabs[0].id)
+    }
+  }, [tabs, activeTab])
+
   return (
     <Content>
       <TotalCoins className={styles.total} />
       <TopGame />
-      <div className={styles.coming}>Cumin soon…</div>
-      {/* <div className={styles.tab}>
+      {tabs.length === 0 && <div className={styles.coming}>Cumin soon…</div>}
+      {tabs.length > 0 && <div className={styles.tab}>
         <div className={styles.tabNav}>
           {tabs.map((tab) => (
             <button
@@ -151,12 +79,12 @@ export default function Page() {
             tab.id === activeTab && (
               <div key={tab.id} className={styles.tabContent}>
                 {cards.map((card, index) => (
-                  <CardMine key={index} {...card} />
+                  <CardMine key={index} cardData={card} />
                 ))}
               </div>
             )
         )}
-      </div> */}
+      </div>}
     </Content>
   )
 }

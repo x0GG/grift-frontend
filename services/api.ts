@@ -2,10 +2,13 @@ import { useLaunchParamsStore } from "@/stores/launchParams";
 import { useUserDataStore } from "@/stores/userData";
 import { useLeaserboardStore } from "@/stores/leaderboard";
 import { useInvitedStore, Invited } from "@/stores/invited";
-import { UserData } from "@/stores/userData";
+import { UserData, PurchasedMiningCards } from "@/stores/userData";
 import { useEarnTasksStore, EarnTaskType } from "@/stores/earnTasks";
+import { useMiningCardsStore } from "@/stores/miningCards";
+import { levels } from "@/config/levels"
 
 const baseApiUrl = process.env.NEXT_PUBLIC_API_HOST;
+const retryCount = 3;
 
 type UserDataResponse = {
     telegramId: string;
@@ -15,27 +18,29 @@ type UserDataResponse = {
     languageCode: string;
     isPremium: boolean;
     allowsWriteToPm: boolean;
-    refferalCode: string;
+    referralCode: string;
     profilePicture: string;
     balance: string;
     energy: string;
     level: number;
     earnByTapBoosterLevel: number;
-    energyPerSecondBoosterLevel: number;
     maxEnergyBoosterLevel: number;
     earnPerHourBonus: string;
     lastEnergyUpdateTimestamp: number;
     lastTapTimestamp: number;
     lastDailyClaimTimestamp: number;
-    prevDailyClaimTimestamp: number;
     dailyStreak: number;
     lastFullEnergyBonusTimestamp: number;
+    firstFullEnergyBonusTimestamp: number;
     fullEnergyBonusCount: number;
     teamId: number | null;
     earnTaskIds: string | null;
-    maxEnergy: number;
+    maxEnergy: string;
     energyPerSecond: number;
     earnPerTap: number;
+    earnPerHour: string;
+    lastBalanceByMiningUpdateTimestamp: number;
+    purchasedMiningCards: PurchasedMiningCards[];
 }
 
 type EarnTaskResponse = {
@@ -43,9 +48,30 @@ type EarnTaskResponse = {
     link: string;
     type: EarnTaskType;
     reward: number;
+    order: number;
 }
 
-type LeaderboartResponse = {
+type MiningCardLevelResponse = {
+    level: number;
+    cost: bigint;
+    earnPerHourBonus: bigint;
+    minimalUserLevel: number;
+    dependedOnCardId: number;
+    dependedOnCardLevel: number;
+    minInvitedUsers: number;
+}
+
+type MiningCardResponse = {
+    id: number;
+    name: string;
+    description: string;
+    image: string;
+    groupTag: string;
+    groupName: string;
+    levels: MiningCardLevelResponse[];
+}
+
+type LeaderboardResponse = {
     telegramId: string;
     firstName: string;
     lastName: string;
@@ -53,6 +79,11 @@ type LeaderboartResponse = {
     profilePicture: string;
     isPremium: boolean;
     balance: string;
+}
+
+type InvitedResponse = {
+    invited: Invited[];
+    total: number;
 }
 
 const processUserData = (userData: UserDataResponse): UserData => {
@@ -64,34 +95,33 @@ const processUserData = (userData: UserDataResponse): UserData => {
         languageCode: userData.languageCode,
         isPremium: userData.isPremium,
         allowsWriteToPm: userData.allowsWriteToPm,
-        refferalCode: userData.refferalCode,
+        referralCode: userData.referralCode,
         profilePicture: userData.profilePicture,
         balance: BigInt(userData.balance),
         energy: BigInt(userData.energy),
         level: userData.level,
         earnByTapBoosterLevel: userData.earnByTapBoosterLevel,
-        energyPerSecondBoosterLevel: userData.energyPerSecondBoosterLevel,
         maxEnergyBoosterLevel: userData.maxEnergyBoosterLevel,
         earnPerHourBonus: userData.earnPerHourBonus,
         lastEnergyUpdateTimestamp: userData.lastEnergyUpdateTimestamp,
         lastTapTimestamp: userData.lastTapTimestamp,
         lastDailyClaimTimestamp: userData.lastDailyClaimTimestamp,
-        prevDailyClaimTimestamp: userData.prevDailyClaimTimestamp,
         dailyStreak: userData.dailyStreak,
         lastFullEnergyBonusTimestamp: userData.lastFullEnergyBonusTimestamp,
+        firstFullEnergyBonusTimestamp: userData.firstFullEnergyBonusTimestamp,
         fullEnergyBonusCount: userData.fullEnergyBonusCount,
         teamId: userData.teamId !== null ? userData.teamId : -1,
         earnTaskIds: userData.earnTaskIds ? userData.earnTaskIds.split(",").map(Number) : [],
-        maxEnergy: userData.maxEnergy,
+        maxEnergy: BigInt(userData.maxEnergy),
         energyPerSecond: userData.energyPerSecond,
         earnPerTap: userData.earnPerTap,
+        earnPerHour: BigInt(userData.earnPerHour),
+        purchasedMiningCards: userData.purchasedMiningCards,
+        lastBalanceByMiningUpdateTimestamp: userData.lastBalanceByMiningUpdateTimestamp,
     }
 }
 
 const getInitDataString = () => {
-    if (process.env.NEXT_PUBLIC_NODE_ENV === "development") {
-        return "development";
-    }
     return useLaunchParamsStore.getState().launchParams?.initDataRaw || "";
 }
 
@@ -104,20 +134,27 @@ const _updateUserDataRequestBuilder = async (url: string) => {
     if (!initData) {
         return;
     }
-    const response = await fetch(`${baseApiUrl}/${url}`, {
+
+    const requestParams = {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "telegram-init-data": getInitDataString(),
+            "x-telegram-auth": getInitDataString(),
         },
         body: JSON.stringify({
             initData
         })
-    });
+    };
+    const requestURL = `${baseApiUrl}/${url}`;
 
-    if (response.ok) {
-        const result = await response.json() as UserDataResponse;
-        useUserDataStore.getState().setUserData(processUserData(result));
+    for (let i = 0; i < retryCount; i++) {
+        const response = await fetch(requestURL, requestParams);
+
+        if (response.ok) {
+            const result = await response.json() as UserDataResponse;
+            useUserDataStore.getState().setUserData(processUserData(result));
+            return;
+        }
     }
 }
 
@@ -130,7 +167,37 @@ const setTeam = async (teamId: number) => {
 }
 
 const tap = async (count: number) => {
-    await _updateUserDataRequestBuilder(`tap/${count}`);
+    const initData = getInitData();
+    if (!initData) {
+        return;
+    }
+
+    const requestParams = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "x-telegram-auth": getInitDataString(),
+        },
+        body: JSON.stringify({
+            initData
+        })
+    };
+    const requestURL = `${baseApiUrl}/tap/${count}`;
+
+    for (let i = 0; i < retryCount; i++) {
+        const response = await fetch(requestURL, requestParams);
+
+        if (response.ok) {
+            const result = await response.json() as UserDataResponse;
+            const resultData = processUserData(result);
+            const resultBalance = resultData?.balance || BigInt(0);
+            const balance = useUserDataStore.getState().userData?.balance || BigInt(0);
+            if (resultBalance >= balance) {
+                useUserDataStore.getState().setUserData(resultData);
+            }
+            return;
+        }
+    }
 }
 
 const claimDaily = async () => {
@@ -141,16 +208,20 @@ const claimEarnTask = async (taskId: number) => {
     await _updateUserDataRequestBuilder(`earn-task/${taskId}`);
 }
 
+const buyMiningCard = async (cardId: number) => {
+    await _updateUserDataRequestBuilder(`buy-mining-card/${cardId}`);
+}
+
 const buyMaxEnergyBooster = async () => {
     await _updateUserDataRequestBuilder("buy-booster/max-energy");
 }
 
-const buyEnergyRegenBooster = async () => {
-    await _updateUserDataRequestBuilder("buy-booster/energy-regen");
-}
-
 const buyEarnTapBooster = async () => {
     await _updateUserDataRequestBuilder("buy-booster/earn-tap");
+}
+
+const refillEnergy = async () => {
+    await _updateUserDataRequestBuilder("refill-energy");
 }
 
 const getEarnTasks = async () => {
@@ -162,7 +233,7 @@ const getEarnTasks = async () => {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            "telegram-init-data": initDataString,
+            "x-telegram-auth": initDataString,
         }
     });
 
@@ -178,12 +249,91 @@ const getEarnTasks = async () => {
                 id: t.id,
                 link: t.link,
                 type: t.type,
-                reward: t.reward,
+                reward: BigInt(t.reward),
+                order: t.order,
                 isCompleted: isClaimed,
                 isClaimed,
             }
         })
         useEarnTasksStore.getState().setTasks(tasks);
+    }
+}
+
+const getMiningCards = async () => {
+    const initDataString = getInitDataString();
+    if (!initDataString) {
+        return;
+    }
+    const response = await fetch(`${baseApiUrl}/mining-cards`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "x-telegram-auth": initDataString,
+        }
+    });
+
+    if (response.ok) {
+        const result = await response.json() as MiningCardResponse[];
+        const userData = useUserDataStore.getState().userData;
+        if (!userData) {
+            return;
+        }
+
+        await invited();
+        const invitedCount = useInvitedStore.getState().invited.length;
+
+        const checkCardAvailability = (cardLevel: MiningCardLevelResponse): string[] => {
+            const requirements: string[] = [];
+            if (cardLevel.minimalUserLevel > userData.level) {
+                requirements.push(`Lvl. ${levels[cardLevel.minimalUserLevel].name}`);
+            }
+            if (cardLevel.dependedOnCardId) {
+                const dependedCard = userData.purchasedMiningCards.find((c) => c.id === cardLevel.dependedOnCardId);
+                if (!dependedCard || dependedCard.level < cardLevel.dependedOnCardLevel) {
+                    requirements.push(`${result.find((c) => c.id === cardLevel.dependedOnCardId)?.name}: Lvl. ${cardLevel.dependedOnCardLevel}`);
+                }
+            }
+            if (cardLevel.minInvitedUsers > invitedCount) {
+                requirements.push(`Invite ${cardLevel.minInvitedUsers} fren${cardLevel.minInvitedUsers > 1 ? "s" : ""}`);
+            }
+            return requirements;
+        }
+
+        const cards = result.map((card) => {
+            let purchased = userData.purchasedMiningCards.find((c) => c.id === card.id);
+            if (!purchased) {
+                purchased = {
+                    id: card.id,
+                    level: 0,
+                }
+            }
+            return {
+                id: card.id,
+                name: card.name,
+                description: card.description,
+                image: card.image,
+                groupTag: card.groupTag,
+                groupName: card.groupName,
+                purchasedLevel: purchased.level,
+                levels: card.levels.map((l) => {
+                    const requirements = checkCardAvailability(l);
+                    return {
+                        level: l.level,
+                        cost: BigInt(l.cost),
+                        earnPerHourBonus: BigInt(l.earnPerHourBonus),
+                        minimalUserLevel: l.minimalUserLevel,
+                        dependedOnCardId: l.dependedOnCardId,
+                        dependedOnCardLevel: l.dependedOnCardLevel,
+                        minInvitedUsers: l.minInvitedUsers,
+                        isPurchased: purchased.level >= l.level,
+                        isAvailable: requirements.length === 0,
+                        requirements,
+                    }
+                }),
+            }
+        })
+
+        useMiningCardsStore.getState().setCards(cards);
     }
 }
 
@@ -196,12 +346,12 @@ export const getLeaderboard = async (level: number) => {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            "telegram-init-data": initDataString,
+            "x-telegram-auth": initDataString,
         }
     });
 
     if (response.ok) {
-        const result = await response.json() as LeaderboartResponse[];
+        const result = await response.json() as LeaderboardResponse[];
         const leaders = result.map((l) => {
             return {
                 telegramId: l.telegramId,
@@ -226,7 +376,7 @@ const invited = async () => {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "telegram-init-data": getInitDataString(),
+            "x-telegram-auth": getInitDataString(),
         },
         body: JSON.stringify({
             initData
@@ -234,8 +384,13 @@ const invited = async () => {
     });
 
     if (response.ok) {
-        const result = await response.json() as Invited[];
-        useInvitedStore.getState().setInvited(result);
+        const result = await response.json() as InvitedResponse;
+        if (result.invited) {
+            useInvitedStore.getState().setInvited(result.invited);
+        }
+        if (result.total) {
+            useInvitedStore.getState().setTotal(result.total);
+        }
     }
 }
 
@@ -246,10 +401,12 @@ export default {
     tap,
     claimDaily,
     getEarnTasks,
+    getMiningCards,
     claimEarnTask,
     getLeaderboard,
     buyMaxEnergyBooster,
-    buyEnergyRegenBooster,
     buyEarnTapBooster,
+    buyMiningCard,
+    refillEnergy,
     invited
 }

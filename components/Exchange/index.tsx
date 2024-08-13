@@ -8,8 +8,8 @@ import { Heading } from "../Heading"
 import { Icon } from "../Icon"
 import { Modal } from "../Modal"
 import styles from "./Exchange.module.scss"
-import { HOST } from "@/config/constants"
 import api from "@/services/api"
+import { HOST } from "@/config/constants"
 
 export const Exchange = () => {
   const [isOpen, setIsOpen] = useState(false);

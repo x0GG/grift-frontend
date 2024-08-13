@@ -10,14 +10,23 @@ import { useGame } from "@/hooks/useGame"
 import clsx from "clsx"
 import { useTranslations } from "next-intl"
 import { useState } from "react"
-import { HOST } from "@/config/constants"
 import { useUserDataStore, UserData } from "@/stores/userData"
+import { earnByTapBoost, maxEnergyBoost, basic, HOST } from "@/config/constants"
 import api from "@/services/api"
 import styles from "./Boost.module.scss"
+import { formatBigNumber } from "@/libs/utils"
+import Countdown from "@/components/Countdown"
+import { Icon } from "@/components/Icon"
 
 type BoostData = {
-  cost: number
+  cost: bigint
   boost: number
+}
+
+type BonusParams = {
+  firstActivationTimestamp: number,
+  lastActivationTimestamp: number,
+  dailyActivations: number
 }
 
 interface CardBoostProps {
@@ -31,6 +40,14 @@ interface CardBoostProps {
   disabled?: boolean
 }
 
+interface CardBonusProps {
+  title: string
+  description: string
+  objKey: string
+  illu: React.ReactNode
+  disabled?: boolean
+}
+
 const getBoosterLevel = (objKey: string, userData: UserData): number => {
   if (!userData) return 0
   switch (objKey) {
@@ -38,8 +55,31 @@ const getBoosterLevel = (objKey: string, userData: UserData): number => {
       return userData.maxEnergyBoosterLevel
     case "earnByTapBoosterLevel":
       return userData.earnByTapBoosterLevel
-    case "energyPerSecondBoosterLevel":
-      return userData.energyPerSecondBoosterLevel
+    default:
+      return 0
+  }
+}
+
+const getBonusParams = (objKey: string, userData: UserData): BonusParams | null => {
+  if (!userData) return null
+  switch (objKey) {
+    case "fullEnergy":
+      return {
+        firstActivationTimestamp: userData.firstFullEnergyBonusTimestamp,
+        lastActivationTimestamp: userData.lastFullEnergyBonusTimestamp,
+        dailyActivations: userData.fullEnergyBonusCount
+      }
+    default:
+      return null
+  }
+}
+
+const getBasicParam = (objKey: string): number => {
+  switch (objKey) {
+    case "maxEnergyBoosterLevel":
+      return basic.maxEnergy
+    case "earnByTapBoosterLevel":
+      return basic.earnByTap
     default:
       return 0
   }
@@ -62,10 +102,10 @@ const CardBoost = ({
   const coins = balance ?? BigInt(0)
   const boosterLevel = getBoosterLevel(objKey, userData)
   const max = boosterLevel >= data.length - 1
-  const nextPrice = data[boosterLevel + 1] ? data[boosterLevel + 1].cost : 0
+  const nextPrice = data[boosterLevel + 1] ? data[boosterLevel + 1].cost : BigInt(0)
 
-  const subTitle = subtitle ? subtitle : max ? 'Max level reached' : `Level ${boosterLevel} -> Level ${boosterLevel + 1}`
-  
+  const subTitle = max ? 'Max level reached' : `+${getBasicParam(objKey)} ${subtitle}`
+
   const buyBooster = async () => {
     if (pending) return
     setPending(true)
@@ -75,9 +115,6 @@ const CardBoost = ({
         break
       case "earnByTapBoosterLevel":
         await api.buyEarnTapBooster()
-        break
-      case "energyPerSecondBoosterLevel":
-        await api.buyEnergyRegenBooster()
         break
       default:
         break
@@ -100,11 +137,123 @@ const CardBoost = ({
         <div className={styles.txt}>
           <div className={styles.title}>{title}</div>
           <div className={styles.subtitle}>
-            {!max && nextPrice !== 0 && (
+            {subTitle}
+            {!max && nextPrice !== BigInt(0) && (
               <>
-                {nextPrice} <Coin min /> <span />
+                <span />
+                {formatBigNumber(nextPrice)} <Coin min />
               </>
             )}
+          </div>
+        </div>
+      </div>
+      {isOpen && (
+        <Modal onClose={() => setIsOpen(false)} className={styles.booster}>
+          <Heading
+            title={title}
+            txt={description}
+            top={
+              <div className={styles.boosterIllu}>
+                {illu} <div className={styles.boosterBg}>{illu}</div>
+              </div>
+            }
+          />
+          <div className={styles.section}>
+            {pending && <Button className={styles.btn} type="secondary" disabled={true}>
+              <Icon icon="line-md:loading-twotone-loop" style={{
+                "height": "20px",
+                "padding": "0"
+              }} />
+            </Button>}
+            {!pending && <>
+              {max ? (
+                <Button className={styles.btn} type="secondary">
+                  {subtitle}
+                </Button>
+              ) : (
+                <>
+                  {coins >= nextPrice ? (
+                    <Button
+                      className={styles.btn}
+                      onClick={buyBooster}
+                    >
+                      Activate for <strong>
+                        {nextPrice === BigInt(0) ?
+                          "Free"
+                          : (
+                            <>
+                              {formatBigNumber(nextPrice)} <Coin min />
+                            </>
+                          )}
+                      </strong>
+                    </Button>
+                  ) : (
+                    <Button className={styles.btn} type="secondary" disabled={true}>
+                      Insufficient funds
+                    </Button>
+                  )}
+                </>
+              )}
+            </>}
+          </div>
+        </Modal>
+      )}
+    </>
+  )
+}
+
+const CardBonus = ({
+  title,
+  description,
+  illu,
+  objKey,
+  disabled
+}: CardBonusProps) => {
+  const { userData } = useUserDataStore()
+  const [isOpen, setIsOpen] = useState(false)
+  const [pending, setPending] = useState(false)
+
+  const maxDailyActivations = 6;
+  const bonusParams = getBonusParams(objKey, userData)
+  const maxActivationsReached = bonusParams ? bonusParams.dailyActivations === maxDailyActivations : true
+  const nextActivation = bonusParams
+    ? maxActivationsReached
+      ? (bonusParams?.firstActivationTimestamp + 24 * 60 * 60) * 1000
+      : (bonusParams?.lastActivationTimestamp + 60 * 60) * 1000
+    : 0
+  const isDayPassed = bonusParams ? (bonusParams.firstActivationTimestamp + 24 * 60 * 60) * 1000 <= Date.now() : false
+  const isCountdown = nextActivation > Date.now()
+
+  const subTitle = disabled ? 'Soon' : `${isDayPassed ? maxDailyActivations : (maxDailyActivations - (bonusParams?.dailyActivations ?? 0))} / ${maxDailyActivations}`
+
+  const buyBooster = async () => {
+    if (pending) return
+    setPending(true)
+    switch (objKey) {
+      case "fullEnergy":
+        await api.refillEnergy()
+        break
+      default:
+        break
+    }
+    setPending(false)
+    setIsOpen(false)
+  }
+
+  const handleOpen = () => {
+    if (disabled) return
+    setIsOpen(true)
+  }
+
+  return (
+    <>
+      <div className={styles.card} aria-disabled={disabled} onClick={handleOpen}>
+        <div className={styles.illu}>
+          {illu} <div className={styles.blur}>{illu}</div>
+        </div>
+        <div className={styles.txt}>
+          <div className={styles.title}>{title}</div>
+          <div className={styles.subtitle}>
             {subTitle}
           </div>
         </div>
@@ -121,36 +270,25 @@ const CardBoost = ({
             }
           />
           <div className={styles.section}>
-            {max ? (
-              <Button className={styles.btn} type="secondary">
-                {subtitle}
-              </Button>
-            ) : (
-              <>
-                {coins >= nextPrice ? (
-                  <Button
-                    className={styles.btn}
-                    onClick={buyBooster}
-                  >
-                    Activate for{" "}
-                    <strong>
-                      {nextPrice === 0 ? (
-                        "Free"
-                      ) : (
-                        <>
-                          {nextPrice}
-                          <Coin min />
-                        </>
-                      )}
-                    </strong>
-                  </Button>
-                ) : (
-                  <Button className={styles.btn} type="secondary">
-                    Insufficient funds
-                  </Button>
-                )}
-              </>
-            )}
+            {pending && <Button className={styles.btn} type="secondary" disabled={true}>
+              <Icon icon="line-md:loading-twotone-loop" style={{
+                "height": "20px",
+                "padding": "0"
+              }} />
+            </Button>}
+            {!pending && <>
+              {isCountdown
+                ? <Button className={styles.btn} type="secondary" disabled={true} >
+                  <Countdown targetTime={nextActivation} />
+                </Button>
+                : <Button
+                  className={styles.btn}
+                  onClick={buyBooster}
+                >
+                  Activate for <strong>Free</strong>
+                </Button>
+              }
+            </>}
           </div>
         </Modal>
       )}
@@ -162,18 +300,16 @@ export const Boost = () => {
   const t = useTranslations("Clicker.Bottom")
   const [isOpen, setIsOpen] = useState(false)
 
-  const dailyBoosters: CardBoostProps[] = [
+  const dailyBoosters: CardBonusProps[] = [
     {
       title: "Turbo",
-      subtitle: "Soon",
       description:
         "Multiply tap income by 5 for 20 seconds without using battery.",
-      data: [],
       objKey: "turbo",
       disabled: true,
       illu: (
         <img
-          src={`${HOST}/img/boost.png`}
+          src={HOST + "/img/boost.png"}
           width={340}
           height={401}
           alt={t("boost")}
@@ -183,14 +319,11 @@ export const Boost = () => {
     },
     {
       title: "Full Energy",
-      subtitle: "Soon",
       description: "Fill your energy to the maximum.",
-      data: [],
       objKey: "fullEnergy",
-      disabled: true,
       illu: (
         <img
-          src={`${HOST}/img/energy.png`}
+          src={HOST + "/img/energy.png"}
           width={340}
           height={401}
           alt={t("energy")}
@@ -202,26 +335,14 @@ export const Boost = () => {
 
   const boosters: CardBoostProps[] = [
     {
-      title: "Grifty Shrimp Kick",
-      subtitle: "",
-      description: "Max energy booster.",
-      data: [
-        { cost: 0, boost: 0 }, // level 0
-        { cost: 100, boost: 500 }, // level 1
-        { cost: 200, boost: 1_000 }, // level 2
-        { cost: 2_500, boost: 1_000 }, // level 3
-        { cost: 10_000, boost: 5_000 }, // level 4
-        { cost: 25_000, boost: 10_000 }, // level 5
-        { cost: 50_000, boost: 25_000 }, // level 6
-        { cost: 100_000, boost: 50_000 }, // level 7
-        { cost: 500_000, boost: 100_000 }, // level 8
-        { cost: 1_000_000, boost: 500_000 }, // level 9
-        { cost: 5_000_000, boost: 1_000_000 } // level 10
-      ],
+      title: "Energy Limit",
+      subtitle: "to max energy",
+      description: `Your max energy will be increased by ${basic.maxEnergy} with each purchase.`,
+      data: maxEnergyBoost,
       objKey: "maxEnergyBoosterLevel",
       illu: (
         <img
-          src={`${HOST}/img/energy.png`}
+          src={HOST + "/img/energy.png"}
           width={340}
           height={401}
           alt={t("energy")}
@@ -230,26 +351,14 @@ export const Boost = () => {
       )
     },
     {
-      title: "Grifty Dolphin Kick",
-      subtitle: "",
-      description: "Earn by tap booster.",
-      data: [
-        { cost: 0, boost: 0 }, // level 0
-        { cost: 50, boost: 1 }, // level 1
-        { cost: 100, boost: 2 }, // level 2
-        { cost: 1_000, boost: 3 }, // level 3
-        { cost: 2_500, boost: 4 }, // level 4
-        { cost: 5_000, boost: 5 }, // level 5
-        { cost: 10_000, boost: 6 }, // level 6
-        { cost: 25_000, boost: 7 }, // level 7
-        { cost: 50_000, boost: 8 }, // level 8
-        { cost: 75_000, boost: 9 }, // level 9
-        { cost: 100_000, boost: 10 } // level 10
-      ],
+      title: "Tap Boost",
+      subtitle: "to earn per tap",
+      description: `Your tap income will be increased by ${basic.earnByTap} with each purchase.`,
+      data: earnByTapBoost,
       objKey: "earnByTapBoosterLevel",
       illu: (
         <img
-          src={`${HOST}/img/energy.png`}
+          src={HOST + "/img/energy.png"}
           width={340}
           height={401}
           alt={t("energy")}
@@ -257,35 +366,6 @@ export const Boost = () => {
         />
       )
     },
-    {
-      title: "Grifty Whale Kick",
-      subtitle: "",
-      description:
-        "Increase the speed at which energy recharges",
-      data: [
-        { cost: 0, boost: 0 }, // level 0
-        { cost: 100, boost: 1 }, // level 1
-        { cost: 200, boost: 2 }, // level 2
-        { cost: 2_500, boost: 3 }, // level 3
-        { cost: 10_000, boost: 4 }, // level 4
-        { cost: 25_000, boost: 5 }, // level 5
-        { cost: 100_000, boost: 6 }, // level 6
-        { cost: 250_000, boost: 7 }, // level 7
-        { cost: 500_000, boost: 8 }, // level 8
-        { cost: 1_000_000, boost: 9 }, // level 9
-        { cost: 5_000_000, boost: 10 } // level 10
-      ],
-      objKey: "energyPerSecondBoosterLevel",
-      illu: (
-        <img
-          src={`${HOST}/img/energy.png`}
-          width={340}
-          height={401}
-          alt={t("energy")}
-          draggable={false}
-        />
-      )
-    }
   ]
 
   return (
@@ -293,7 +373,7 @@ export const Boost = () => {
       <div className={styles.boost} onClick={() => setIsOpen(true)}>
         <span>{t("boost")}</span>
         <img
-          src={`${HOST}/img/boost.png`}
+          src={HOST + "/img/boost.png"}
           width={340}
           height={401}
           alt={t("boost")}
@@ -314,7 +394,7 @@ export const Boost = () => {
             <Title>Your Daily Boosters:</Title>
             <div className={styles.list}>
               {dailyBoosters.map((booster, index) => (
-                <CardBoost key={index} {...booster} />
+                <CardBonus key={index} {...booster} />
               ))}
             </div>
           </div>

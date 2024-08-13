@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useEarnTasksStore } from "@/stores/earnTasks";
 import api from "@/services/api";
 import { Heading } from "@/components/Heading"
@@ -12,7 +12,9 @@ import styles from "./earn.module.scss"
 export default function Page() {
   const {tasks} = useEarnTasksStore()
 
-  console.log(tasks)
+  const sortedTasksByType = useMemo(() => {
+    return tasks.sort((a, b) => a.order - b.order)
+  }, [tasks])
 
   useEffect(() => {
     api.getEarnTasks()
@@ -24,7 +26,7 @@ export default function Page() {
       <Daily />
       <Title>Tasks List</Title>
       <div className={styles.list}>
-        {tasks.map((task, index) => (
+        {sortedTasksByType.map((task, index) => (
           <CardEarn key={index} task={task} />
         ))}
       </div>

@@ -91,3 +91,91 @@
     margin-right: 0;
   }
 }
+
+.referral {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+
+  h3 {
+    display: flex;
+    align-items: center;
+
+    img {
+      width: 16px;
+    }
+  }
+}
+
+.bonuses {
+  text-align: center;
+  font-weight: bold;
+  color: #ff0079;
+}
+
+.levelUpBonus {
+  color: #fff;
+
+  .parent {
+    max-width: 28rem;
+    margin: 0 auto;
+
+    .mainHeading {
+      font-weight: bold;
+      color: #fff;
+      font-size: 1.25rem; ;
+    }
+
+    .child {
+      margin-top: 0.5rem;
+
+      .firstChild {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 8px 0;
+        width: 100%;
+
+        .childHeading {
+          color: rgb(161 161 170);
+          font-size: 13px;
+          width: 33.333333%;
+        }
+      }
+
+      .levels {
+        background-color: rgb(24 24 27);
+        padding: 16px 8px;
+        display: flex;
+        border-radius: 8px;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin-top: 0.5rem;
+
+        .name {
+          font-size: 14px;
+          width: 33.333333%;
+        }
+
+        .levelChild {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          width: 33.333333%;
+
+          .reward {
+            font-size: 14px;
+            color: rgb(234 179 8);
+            font-weight: bold;
+          }
+
+          img {
+            width: 16px;
+          }
+        }
+      }
+    }
+  }
+}

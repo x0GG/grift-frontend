@@ -11,7 +11,7 @@ import localFont from "next/font/local"
 import NextTopLoader from "nextjs-toploader"
 import { Toaster } from "sonner"
 import { ModalWork } from "./(components)/ModalWork"
-import Loader from "./(components)/Loader"
+import Loader from "@/components/Loader"
 import styles from "./layout.module.scss"
 
 const fontMain = localFont({
@@ -76,7 +76,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           </div>
           <div id="modal-root" />
           <NoMobile />
-          {/* <ModalWork /> */}
+          <ModalWork />
         </NextIntlClientProvider>
       </body>
     </html>

@@ -38,6 +38,11 @@ const taskInfo: Record<EarnTaskType, TaskInfo> = {
     title: "Subscribe YouTube",
     buttonText: "Subscribe"
   },
+  [EarnTaskType.YOUTUBE_WATCH]: {
+    illu: <Icon icon="bx:bxl-youtube" />,
+    title: "Watch Full Video",
+    buttonText: "Watch"
+  },
   [EarnTaskType.INSTAGRAM]: {
     illu: <Icon icon="bx:bxl-instagram" />,
     title: "Follow Instagram",
@@ -121,13 +126,23 @@ export const CardEarn = ({
       <div className={styles.amount}>
         +{formatBigNumber(task.reward)} <Coin min />
       </div>
-      {task.isClaimed ? (
-        <Button className={clsx(styles.button, styles.green)} icon="ph:check" />
-      ) :
-        task.isCompleted
-          ? <Button className={styles.button}>Check</Button>
-          : <Button className={styles.button}>{buttonText}</Button>
-      }
+      {pending && <Button className={styles.button}>
+        <Icon icon="line-md:loading-twotone-loop" style={{
+          "height": "10px",
+          "padding": "0",
+          "marginBottom": "1px", marginRight: '0.5px'
+        }} />
+      </Button>}
+
+      {!pending && <>
+        {task.isClaimed ? (
+          <Button className={clsx(styles.button, styles.green)} icon="ph:check" />
+        ) :
+          task.isCompleted
+            ? <Button className={styles.button}>Check</Button>
+            : <Button className={styles.button}>{buttonText}</Button>
+        }
+      </>}
     </div>
   )
 }

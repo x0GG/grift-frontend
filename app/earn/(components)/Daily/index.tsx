@@ -7,66 +7,44 @@ import { Modal } from "@/components/Modal"
 import { formatBigNumber } from "@/libs/utils"
 import clsx from "clsx"
 import { useState } from "react"
-import { HOST } from "@/config/constants"
 import { useUserDataStore } from "@/stores/userData"
 import api from "@/services/api"
+import { DAILY_TASKS, HOST } from "@/config/constants"
 import styles from "./Daily.module.scss"
+import Countdown from "@/components/Countdown"
 
-const dates = [
-  {
-    reward: 20
-  },
-  {
-    reward: 40
-  },
-  {
-    reward: 100
-  },
-  {
-    reward: 200
-  },
-  {
-    reward: 400
-  },
-  {
-    reward: 800
-  },
-  {
-    reward: 1500
-  },
-  {
-    reward: 3000
-  },
-  {
-    reward: 5000
-  },
-  {
-    reward: 10000
-  }
-]
+const dayInSec = 86400
 
 export const Daily = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const [pending, setPending] = useState(false)
   const { userData } = useUserDataStore()
 
-  console.log(userData?.lastDailyClaimTimestamp)
-  const isClaimed = userData ? Date.now()/1000 - userData.lastDailyClaimTimestamp <= 84000 : true
-  console.log(isClaimed)
-  const currentDay = userData ? userData.dailyStreak : 0
+  const diff = Date.now() / 1000 - (userData?.lastDailyClaimTimestamp ?? 0)
+  const isClaimed = userData ? diff <= dayInSec : true
+  const currentDay = userData ? (diff < 2 * dayInSec ? userData.dailyStreak : 0) : 0
+  const nextActivationTimestamp = userData ? (userData.lastDailyClaimTimestamp + dayInSec) * 1000 : 0
+
+  const handleClaim = async () => {
+    if (pending) return
+    setPending(true)
+    await api.claimDaily()
+    setPending(false)
+  }
 
   return (
     <>
       <div className={styles.daily} onClick={() => setIsOpen(true)}>
         <div>
           <img
-            src={`${HOST}/img/calendar.png`}
+            src={HOST + "/img/calendar.png"}
             width={732}
             height={426}
             alt="Calendar"
             className={styles.calendarFirst}
           />
           <img
-            src={`${HOST}/img/calendar.png`}
+            src={HOST + "/img/calendar.png"}
             width={732}
             height={426}
             alt="Calendar"
@@ -85,7 +63,7 @@ export const Daily = () => {
             txt="Accrue coins for logging into the game daily without skipping."
             top={
               <img
-                src={`${HOST}/img/calendar.png`}
+                src={HOST + "/img/calendar.png"}
                 width={732}
                 height={426}
                 alt="Calendar"
@@ -94,7 +72,7 @@ export const Daily = () => {
             }
           />
           <ul className={styles.dates}>
-            {dates.map(({ reward }, i) => (
+            {DAILY_TASKS.map(({ reward }, i) => (
               <li
                 key={i}
                 className={clsx(styles.date, {
@@ -107,13 +85,17 @@ export const Daily = () => {
               </li>
             ))}
           </ul>
-          <Button
+          {pending && <Button className={styles.button}>
+            <Icon icon="line-md:loading-twotone-loop" style={{
+              "height": "20px",
+              "padding": "0"
+            }} />
+          </Button>}
+          {!pending && <Button
             className={styles.button}
             disabled={isClaimed}
-            onClick={() => {
-              api.claimDaily()
-            }}
-          >Claim reward</Button>
+            onClick={handleClaim}
+          >{isClaimed ? <Countdown targetTime={nextActivationTimestamp} /> : 'Claim reward'}</Button>}
         </Modal>
       )}
     </>

@@ -1,7 +1,6 @@
 "use client"
 
-// import { Token3D } from "@/components/Token3D"
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 import { TopGame } from "@/components/TopGame"
 import { TotalCoins } from "@/components/TotalCoins"
@@ -16,6 +15,7 @@ import { Progress } from "../Progress"
 import styles from "./Clicker.module.scss"
 import { useHapticFeedback } from '@telegram-apps/sdk-react'
 import api from '@/services/api'
+import { formatBigNumber } from "@/libs/utils"
 
 const maxTouches = 10
 
@@ -30,7 +30,7 @@ const Game = () => {
   const debouncedTap = useDebouncedCallback(t => {
     api.tap(t)
     setTaps(0)
-  }, 500)
+  }, 1000)
 
   const addFeedBack = (n: number, e: React.TouchEvent<HTMLDivElement>) => {
     if (!gameRef.current || !feedBackRef.current) return
@@ -47,7 +47,7 @@ const Game = () => {
       const feedBack = document.createElement("div")
       feedBack.style.left = `${x}px`
       feedBack.style.top = `${y}px`
-      feedBack.dataset.text = `+${n}`
+      feedBack.dataset.text = `+${formatBigNumber(BigInt(n), true)}`
 
       feedBack.dataset.creationTime = String(performance.now())
 
@@ -93,9 +93,13 @@ const Game = () => {
     if (e.touches.length === 0 && tapAnimation) {
       gameRef.current?.classList.remove(styles.clicked)
     }
-
-    // reset()
   }
+
+  useEffect(() => {
+    return () => {
+      debouncedTap.flush()
+    }
+  }, [])
 
   return (
     <div
@@ -110,16 +114,13 @@ const Game = () => {
       }
     >
       <div className={styles.gameContent}>
-        {/* <Token3D
-          key={currentLevel.id}
-          id={currentLevel.id}
-          className={styles.gameCanvas}
-        /> */}
         <img
-          src={`${HOST}/img/coins/${currentLevel.id}.png`}
           className={styles.gameCanvas}
+          key={currentLevel.id}
+          src={`${HOST}/img/coins/${currentLevel.id}.png`}
+          alt={currentLevel.id}
         />
-        <img src={`${HOST}/img/socle.png`} className={styles.socle} loading="lazy" />
+        <img src={HOST + "/img/socle.png"} className={styles.socle} loading="lazy" />
       </div>
       <div ref={feedBackRef} className={styles.feedback} />
     </div>
