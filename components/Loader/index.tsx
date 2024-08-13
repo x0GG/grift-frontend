@@ -6,7 +6,7 @@ export default function Loader() {
         <div className={styles.top}>
             
         </div>
-        <img src={"/img/loading.svg"} width={85} height={85} alt="Loading" />
+        <img src={HOST + "/img/loading.svg"} width={85} height={85} alt="Loading" />
         <div className={styles.bottom}>
             
         </div>

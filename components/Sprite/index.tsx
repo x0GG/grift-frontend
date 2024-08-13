@@ -9,7 +9,7 @@ export const Sprite = ({ id, title, ...props }: SpriteProps) => {
   return (
     <svg {...props} xmlns="http://www.w3.org/2000/svg">
       {title && <title>{title}</title>}
-      <use href={`/img/sprites.svg#${id}`} />
+      <use href={HOST + `/img/sprites.svg#${id}`} />
     </svg>
   )
 }
