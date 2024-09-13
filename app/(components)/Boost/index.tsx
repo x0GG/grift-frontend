@@ -32,7 +32,7 @@ type BonusParams = {
 interface CardBoostProps {
   title: string
   subtitle: string
-  description: string
+  description: (boost: string) => string
   data: BoostData[]
   objKey: string
   illu: React.ReactNode
@@ -103,8 +103,9 @@ const CardBoost = ({
   const boosterLevel = getBoosterLevel(objKey, userData)
   const max = boosterLevel >= data.length - 1
   const nextPrice = data[boosterLevel + 1] ? data[boosterLevel + 1].cost : BigInt(0)
+  const nextBoost = data[boosterLevel + 1] ? data[boosterLevel + 1].boost : 0
 
-  const subTitle = max ? 'Max level reached' : `+${getBasicParam(objKey)} ${subtitle}`
+  const subTitle = max ? 'Max level reached' : `+${nextBoost} ${subtitle}`
 
   const buyBooster = async () => {
     if (pending) return
@@ -151,7 +152,7 @@ const CardBoost = ({
         <Modal onClose={() => setIsOpen(false)} className={styles.booster}>
           <Heading
             title={title}
-            txt={description}
+            txt={description(`${nextBoost}`)}
             top={
               <div className={styles.boosterIllu}>
                 {illu} <div className={styles.boosterBg}>{illu}</div>
@@ -337,7 +338,7 @@ export const Boost = () => {
     {
       title: "Energy Limit",
       subtitle: "to max energy",
-      description: `Your max energy will be increased by ${basic.maxEnergy} with each purchase.`,
+      description: (maxEnergyBonus: string) => `Your max energy will be increased by ${maxEnergyBonus} with purchase.`,
       data: maxEnergyBoost,
       objKey: "maxEnergyBoosterLevel",
       illu: (
@@ -353,7 +354,7 @@ export const Boost = () => {
     {
       title: "Tap Boost",
       subtitle: "to earn per tap",
-      description: `Your tap income will be increased by ${basic.earnByTap} with each purchase.`,
+      description: (earnByTapBonus: string) => `Your tap income will be increased by ${earnByTapBonus} with purchase.`,
       data: earnByTapBoost,
       objKey: "earnByTapBoosterLevel",
       illu: (

@@ -96,6 +96,11 @@ export const CardEarn = ({
 
   const handleActive = async () => {
     if (task.isClaimed || pending) {
+      if (task.type === EarnTaskType.TELEGRAM) {
+        utils?.openTelegramLink(task.link);
+      } else {
+        utils?.openLink(task.link);
+      }
       return;
     }
     setPending(true);
@@ -121,7 +126,7 @@ export const CardEarn = ({
       onClick={handleActive}
     >
       <div className={styles.illu}>{illu && illu}</div>
-      <div className={styles.title}>{title}</div>
+      <div className={styles.title}>{task.title || title}</div>
 
       <div className={styles.amount}>
         +{formatBigNumber(task.reward)} <Coin min />
@@ -136,11 +141,13 @@ export const CardEarn = ({
 
       {!pending && <>
         {task.isClaimed ? (
-          <Button className={clsx(styles.button, styles.green)} icon="ph:check" />
+          <>
+            <Button className={clsx(styles.button, styles.green)} icon="ph:check">{task.btnText || buttonText}</Button>
+          </>
         ) :
           task.isCompleted
             ? <Button className={styles.button}>Check</Button>
-            : <Button className={styles.button}>{buttonText}</Button>
+            : <Button className={styles.button}>{task.btnText || buttonText}</Button>
         }
       </>}
     </div>

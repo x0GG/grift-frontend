@@ -20,6 +20,8 @@ export type EarnTask = {
   order: number;
   isCompleted: boolean;
   isClaimed: boolean;
+  title: string;
+  btnText: string;
 }
 
 type EarnTasksStore = {

@@ -49,6 +49,8 @@ type EarnTaskResponse = {
     type: EarnTaskType;
     reward: number;
     order: number;
+    title?: string;
+    btnText?: string;
 }
 
 type MiningCardLevelResponse = {
@@ -251,6 +253,8 @@ const getEarnTasks = async () => {
                 type: t.type,
                 reward: BigInt(t.reward),
                 order: t.order,
+                title: t.title || "",
+                btnText: t.btnText || "",
                 isCompleted: isClaimed,
                 isClaimed,
             }
