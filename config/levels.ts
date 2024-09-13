@@ -4,52 +4,52 @@ import { DECIMALS_MULTIPLIER } from "./constants"
 export const levels: Level[] = [
   {
     id: "bronze",
-    name: "Tin Foil Hat",
+    name: "Peepo",
     requiredCoin: BigInt(0) * BigInt(DECIMALS_MULTIPLIER)
   },
   {
     id: "silver",
-    name: "Deep Diver",
+    name: "Father Garcia",
     requiredCoin: BigInt(1000) * BigInt(DECIMALS_MULTIPLIER),
   },
   {
     id: "gold",
-    name: "Crackpot",
+    name: "Conspira Dog",
     requiredCoin: BigInt(5000) * BigInt(DECIMALS_MULTIPLIER),
   },
   {
     id: "platinum",
-    name: "Adept of Secrets",
+    name: "Dr Stonks",
     requiredCoin: BigInt(10000) * BigInt(DECIMALS_MULTIPLIER),
   },
   {
     id: "diamond",
-    name: "55D Chess Player",
+    name: "Ayyy Lmao",
     requiredCoin: BigInt(50000) * BigInt(DECIMALS_MULTIPLIER),
   },
   {
     id: "epic",
-    name: "Chilluminati",
+    name: "Yuga Rider",
     requiredCoin: BigInt(100000) * BigInt(DECIMALS_MULTIPLIER),
   },
   {
     id: "legendary",
-    name: "Metatron",
+    name: "Big Fren",
     requiredCoin: BigInt(250000) * BigInt(DECIMALS_MULTIPLIER),
   },
   {
     id: "master",
-    name: "Reality Haxxor",
+    name: "Chadley Dudebro",
     requiredCoin: BigInt(500000) * BigInt(DECIMALS_MULTIPLIER),
   },
   {
     id: "grandmaster",
-    name: "Ascended Master",
+    name: "Alex Jones",
     requiredCoin: BigInt(1000000) * BigInt(DECIMALS_MULTIPLIER),
   },
   {
     id: "lord",
-    name: "Grift God",
+    name: "Conspiracy God",
     requiredCoin: BigInt(10000000) * BigInt(DECIMALS_MULTIPLIER),
   }
 ]
