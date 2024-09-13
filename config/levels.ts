@@ -10,12 +10,12 @@ export const levels: Level[] = [
   {
     id: "silver",
     name: "Deep Diver",
-    requiredCoin: BigInt(200) * BigInt(DECIMALS_MULTIPLIER),
+    requiredCoin: BigInt(1000) * BigInt(DECIMALS_MULTIPLIER),
   },
   {
     id: "gold",
     name: "Crackpot",
-    requiredCoin: BigInt(1000) * BigInt(DECIMALS_MULTIPLIER),
+    requiredCoin: BigInt(5000) * BigInt(DECIMALS_MULTIPLIER),
   },
   {
     id: "platinum",
@@ -25,31 +25,31 @@ export const levels: Level[] = [
   {
     id: "diamond",
     name: "55D Chess Player",
-    requiredCoin: BigInt(40000) * BigInt(DECIMALS_MULTIPLIER),
+    requiredCoin: BigInt(50000) * BigInt(DECIMALS_MULTIPLIER),
   },
   {
     id: "epic",
     name: "Chilluminati",
-    requiredCoin: BigInt(80000) * BigInt(DECIMALS_MULTIPLIER),
+    requiredCoin: BigInt(100000) * BigInt(DECIMALS_MULTIPLIER),
   },
   {
     id: "legendary",
     name: "Metatron",
-    requiredCoin: BigInt(400000) * BigInt(DECIMALS_MULTIPLIER),
+    requiredCoin: BigInt(250000) * BigInt(DECIMALS_MULTIPLIER),
   },
   {
     id: "master",
     name: "Reality Haxxor",
-    requiredCoin: BigInt(2000000) * BigInt(DECIMALS_MULTIPLIER),
+    requiredCoin: BigInt(500000) * BigInt(DECIMALS_MULTIPLIER),
   },
   {
     id: "grandmaster",
     name: "Ascended Master",
-    requiredCoin: BigInt(4000000) * BigInt(DECIMALS_MULTIPLIER),
+    requiredCoin: BigInt(1000000) * BigInt(DECIMALS_MULTIPLIER),
   },
   {
     id: "lord",
     name: "Grift God",
-    requiredCoin: BigInt(40000000) * BigInt(DECIMALS_MULTIPLIER),
+    requiredCoin: BigInt(10000000) * BigInt(DECIMALS_MULTIPLIER),
   }
 ]

@@ -129,8 +129,8 @@ export default function Page() {
         title="Invite a fren with telegram premium"
         amount={referralBonus.premium}
       />
-      {!showBonuses && <h6 className={styles.bonuses} onClick={() => setShowBonuses(true)}>More bonuses</h6>}
-      {showBonuses && <LevelUpBonus />}
+      {/* {!showBonuses && <h6 className={styles.bonuses} onClick={() => setShowBonuses(true)}>More bonuses</h6>}
+      {showBonuses && <LevelUpBonus />} */}
       <div className={styles.list}>
         <div className={styles.listTop}>
           <Title className={styles.listTitle}>

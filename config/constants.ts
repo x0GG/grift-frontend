@@ -13,9 +13,9 @@ export const ENERGY_CHARGE_DELAY = 1000
 export const PROFIT_UPDATE_DELAY = 1000
 
 export const basic = {
-    earnByTap: 0.3,
-    earnPerHour: 0,
-    maxEnergy: 100,
+    earnByTap: 1,
+    earnPerHour: 50,
+    maxEnergy: 500,
     fullEnergyRecoveryTime: 60 * 60, // 1 hour
 }
 
@@ -34,18 +34,28 @@ const dailyTasks = [
 
 export const DAILY_TASKS = dailyTasks.map((task, i) => ({ ...task, reward: BigInt(task.reward) * BigInt(DECIMALS_MULTIPLIER) }))
 
+
+
+
+
+
+
+
+
+
+
 const maxEnergyBoostNumber = [
     { cost: 0, boost: 0 }, // level 0
-    { cost: 100, boost: 50 }, // level 1
-    { cost: 500, boost: 100 }, // level 2
-    { cost: 1000, boost: 100 }, // level 3
-    { cost: 2500, boost: 100 }, // level 4
-    { cost: 5000, boost: 100 }, // level 5
-    { cost: 7500, boost: 100 }, // level 6
-    { cost: 12500, boost: 100 }, // level 7
-    { cost: 17500, boost: 100 }, // level 8
-    { cost: 25000, boost: 100 }, // level 9
-    { cost: 50000, boost: 100 } // level 10
+    { cost: 100, boost: 100 }, // level 1
+    { cost: 500, boost: 200 }, // level 2
+    { cost: 1000, boost: 200 }, // level 3
+    { cost: 2500, boost: 300 }, // level 4
+    { cost: 5000, boost: 300 }, // level 5
+    { cost: 7500, boost: 300 }, // level 6
+    { cost: 12500, boost: 500 }, // level 7
+    { cost: 17500, boost: 500 }, // level 8
+    { cost: 25000, boost: 1000 }, // level 9
+    { cost: 50000, boost: 5000 } // level 10
 ];
 
 export const maxEnergyBoost = maxEnergyBoostNumber.map((value) => ({
@@ -56,14 +66,14 @@ export const maxEnergyBoost = maxEnergyBoostNumber.map((value) => ({
 const earnByTapBoostNumber = [
     { cost: 0, boost: 0 }, // level 0
     { cost: 100, boost: 1 }, // level 1
-    { cost: 500, boost: 2 }, // level 2
-    { cost: 1000, boost: 3 }, // level 3
-    { cost: 2500, boost: 4 }, // level 4
-    { cost: 5000, boost: 5 }, // level 5
-    { cost: 7500, boost: 6 }, // level 6
-    { cost: 12500, boost: 7 }, // level 7
-    { cost: 17500, boost: 8 }, // level 8
-    { cost: 25000, boost: 9 }, // level 9
+    { cost: 500, boost: 1 }, // level 2
+    { cost: 1000, boost: 2 }, // level 3
+    { cost: 2500, boost: 2 }, // level 4
+    { cost: 5000, boost: 2 }, // level 5
+    { cost: 7500, boost: 3 }, // level 6
+    { cost: 12500, boost: 3 }, // level 7
+    { cost: 17500, boost: 3 }, // level 8
+    { cost: 25000, boost: 5 }, // level 9
     { cost: 50000, boost: 10 } // level 10
 ];
 
