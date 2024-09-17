@@ -16,6 +16,7 @@ import styles from "./Clicker.module.scss"
 import { useHapticFeedback } from '@telegram-apps/sdk-react'
 import api from '@/services/api'
 import { formatBigNumber } from "@/libs/utils"
+import isMobile from "is-mobile"
 
 const maxTouches = 10
 
@@ -32,7 +33,7 @@ const Game = () => {
     setTaps(0)
   }, 1000)
 
-  const addFeedBack = (n: number, e: React.TouchEvent<HTMLDivElement>) => {
+  const addTouchFeedBack = (n: number, e: React.TouchEvent<HTMLDivElement>) => {
     if (!gameRef.current || !feedBackRef.current) return
 
     const touches = e.touches.length
@@ -67,10 +68,42 @@ const Game = () => {
     }
   }
 
-  const handleClickStart = (e: React.TouchEvent<HTMLDivElement>) => {
+  const addClickFeedBack = (n: number, e: React.MouseEvent) => {
+    if (!gameRef.current || !feedBackRef.current) return
+
+    const { left, top } = gameRef.current.getBoundingClientRect()
+    const x = e.clientX - left
+    const y = e.clientY - top
+
+    if (numberAnimaton) {
+      const feedBack = document.createElement("div")
+      feedBack.style.left = `${x}px`
+      feedBack.style.top = `${y}px`
+      feedBack.dataset.text = `+${formatBigNumber(BigInt(n), true)}`
+
+      feedBack.dataset.creationTime = String(performance.now())
+
+      feedBackRef.current.appendChild(feedBack)
+
+      const checkToRemove = () => {
+        const currentTime = performance.now()
+        const creationTime = Number(feedBack.dataset.creationTime)
+        if (currentTime - creationTime > DURATION_FEEDBACK) {
+          feedBackRef.current?.removeChild(feedBack)
+        } else {
+          requestAnimationFrame(checkToRemove)
+        }
+      }
+
+      requestAnimationFrame(checkToRemove)
+    }
+  }
+
+  const handleClickStart = (e: React.MouseEvent) => {
+    console.log("handleClickStart")
     if (energy === undefined || earnPerTap === undefined || balance === undefined) return;
     if (energy >= earnPerTap) {
-      addFeedBack(earnPerTap, e)
+      addClickFeedBack(earnPerTap, e)
       setEnergy(energy - BigInt(earnPerTap))
       setBalance(balance + BigInt(earnPerTap))
       const newTaps = taps + 1
@@ -89,7 +122,35 @@ const Game = () => {
     }
   }
 
-  const handleClickEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (energy === undefined || earnPerTap === undefined || balance === undefined) return;
+    if (energy >= earnPerTap) {
+      addTouchFeedBack(earnPerTap, e)
+      setEnergy(energy - BigInt(earnPerTap))
+      setBalance(balance + BigInt(earnPerTap))
+      const newTaps = taps + 1
+      setTaps(newTaps)
+      debouncedTap(newTaps)
+    } else {
+      toast.error("Not enough energy")
+    }
+
+    if (hapticFeedback && vibration) {
+      hapticFeedback.impactOccurred('light')
+    }
+
+    if (tapAnimation) {
+      gameRef.current?.classList.add(styles.clicked)
+    }
+  }
+
+  const handleClickEnd = () => {
+    if (tapAnimation) {
+      gameRef.current?.classList.remove(styles.clicked)
+    }
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
     if (e.touches.length === 0 && tapAnimation) {
       gameRef.current?.classList.remove(styles.clicked)
     }
@@ -105,8 +166,10 @@ const Game = () => {
     <div
       ref={gameRef}
       className={styles.game}
-      onTouchStart={handleClickStart}
-      onTouchEnd={handleClickEnd}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onMouseDown={handleClickStart}
+      onMouseUp={handleClickEnd}
       style={
         {
           "--feedback-duration": `${DURATION_FEEDBACK}ms`

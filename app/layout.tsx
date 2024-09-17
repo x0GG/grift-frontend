@@ -1,7 +1,7 @@
 import { GsapInit } from "@/components/GsapInit"
 import { Header } from "@/components/Header"
 import { Nav } from "@/components/Nav"
-import { NoMobile } from "@/components/NoMobile"
+// import { NoMobile } from "@/components/NoMobile"
 import { MetadataSeo } from "@/libs/metadata"
 import "@/styles/globals.scss"
 import { Viewport } from "next"
@@ -75,7 +75,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
             />
           </div>
           <div id="modal-root" />
-          <NoMobile />
+          {/* <NoMobile /> */}
           <ModalWork />
         </NextIntlClientProvider>
       </body>

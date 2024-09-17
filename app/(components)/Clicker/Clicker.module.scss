@@ -37,6 +37,7 @@
   width: calc(100% + var(--main-padding) * 2);
   left: calc(var(--main-padding) * -1);
   touch-action: manipulation;
+  cursor: pointer;
 
   * {
     touch-action: manipulation;
